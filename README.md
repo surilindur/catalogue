@@ -1,17 +1,16 @@
-# SolidBench Summaries
+# Catalogue
 
-This repository contains a collection of Python scripts to generate summaries for the RDF data from [SolidBench](https://github.com/SolidBench/SolidBench.js). Currently, the following types of summaries are possible to generate:
+This repository contains an experimental utility to generate summaries for data from [SolidBench](https://github.com/SolidBench/SolidBench.js). Currently, the following types of summaries are possible to generate:
 
 * [Vocabulary of Interlinked Datasets (VoID)](https://www.w3.org/TR/void/) for predicate counts, unique subjects, predicates and objects, total triples, etc.
 
 ## Running
 
-The easiest way to run the scripts is to create a virtual environment, install the packages and then run `app.py`:
+After cloning the repository, it should be sufficient to install the dependencies:
 
-    python -m venv .venv
-    source .venv/bin/activate
-    python -m pip install -r requirements.txt
-    python app.py
+    yarn install --frozen-lockfile --ignore-engines
+
+The packages should be built automatically.
 
 ## Issues
 
