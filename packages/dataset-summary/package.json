@@ -1,7 +1,7 @@
 {
-  "name": "@catalogue/dataset-summary-generator",
+  "name": "@catalogue/dataset-summary",
   "version": "0.0.0",
-  "description": "Dataset summary generator component",
+  "description": "Dataset summary base package",
   "repository": "https://github.com/surilindur/catalogue",
   "author": "surilindur",
   "license": "MIT",

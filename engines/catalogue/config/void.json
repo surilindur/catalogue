@@ -2,7 +2,7 @@
   "@context": [
     "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/catalogue/^0.0.0/components/context.jsonld",
     "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/data-loader-filesystem/^0.0.0/components/context.jsonld",
-    "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/dataset-summary-generator/^0.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/dataset-summary/^0.0.0/components/context.jsonld",
     "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/dataset-summary-void/^0.0.0/components/context.jsonld"
   ],
   "@graph": [
@@ -21,7 +21,7 @@
     {
       "comment": "Default summary generator",
       "@id": "urn:catalogue:generator:default",
-      "@type": "SummaryGenerator",
+      "@type": "DatasetSummaryGenerator",
       "loader": {
         "@id": "urn:catalogue:loader:default"
       },

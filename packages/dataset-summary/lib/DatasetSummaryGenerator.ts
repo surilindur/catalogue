@@ -2,11 +2,11 @@ import type { IDataLoader } from '@catalogue/data-loader';
 import type * as RDF from '@rdfjs/types';
 import type { IDatasetSummary } from './DatasetSummary';
 
-export class SummaryGenerator implements ISummaryGenerator {
+export class DatasetSummaryGenerator implements IDatasetSummaryGenerator {
   private readonly loader: IDataLoader;
   private readonly summary: IDatasetSummary;
 
-  public constructor(args: ISummaryGeneratorArgs) {
+  public constructor(args: IDatasetSummaryGeneratorArgs) {
     this.loader = args.loader;
     this.summary = args.summary;
   }
@@ -25,11 +25,11 @@ export class SummaryGenerator implements ISummaryGenerator {
   }
 }
 
-export interface ISummaryGenerator {
+export interface IDatasetSummaryGenerator {
   run: () => Promise<void>;
 }
 
-export interface ISummaryGeneratorArgs {
+export interface IDatasetSummaryGeneratorArgs {
   loader: IDataLoader;
   summary: IDatasetSummary;
 }

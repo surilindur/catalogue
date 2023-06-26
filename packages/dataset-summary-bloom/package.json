@@ -1,17 +1,19 @@
 {
-  "name": "@catalogue/catalogue",
+  "name": "@catalogue/dataset-summary-bloom",
   "version": "0.0.0",
-  "description": "Runner component",
+  "description": "Bloom filter summary for dataset",
   "repository": "https://github.com/surilindur/catalogue",
   "author": "surilindur",
   "license": "MIT",
   "private": true,
   "lsd:module": true,
   "types": "lib/index",
+  "main": "lib/index.js",
   "dependencies": {
     "@catalogue/dataset-summary": "^0.0.0",
-    "@catalogue/dataset-summary-void": "^0.0.0",
-    "@catalogue/dataset-summary-bloom": "^0.0.0",
-    "componentsjs": "^5.0.0"
+    "@catalogue/rdf-namespaces": "^0.0.0",
+    "@types/bloem": "^0.2.0",
+    "bloem": "^0.2.0",
+    "rdf-data-factory": "^1.0.0"
   }
 }

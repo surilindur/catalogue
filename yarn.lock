@@ -635,6 +635,13 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.3.2.tgz#31b9c510d8cada9683549e1dbb4284cca5001faf"
   integrity sha512-V+MvGwaHH03hYhY+k6Ef/xKd6RYlc4q8WBx+2ANmipHJcKuktNcI/NgEsJgdSUF6Lw32njT6OnrRsKYCdgHjYw==
 
+"@types/bloem@^0.2.0":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@types/bloem/-/bloem-0.2.1.tgz#6c076ab356e6bd52fb65de467b50b539d6831111"
+  integrity sha512-POR4WoMTjKPnyLqbZKYJpVWTZ6pSolwgISTUX7CYXsc+jeOpb5aiqvLEZPDNc61d0JoDnIcSE1mb80AtBz9wGA==
+  dependencies:
+    "@types/node" "*"
+
 "@types/http-link-header@^1.0.1":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@types/http-link-header/-/http-link-header-1.0.3.tgz#899adf1d8d2036074514f3dbd148fb901ceff920"
@@ -925,6 +932,19 @@ base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
+
+bitbuffer@0.1.x:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/bitbuffer/-/bitbuffer-0.1.3.tgz#780feb1297caaf0fac9e48cfab946d6efd2bd397"
+  integrity sha512-SyRG3h70w/2MJaN27Z7gQufBDjVx1fiYsxLnZ9XBYZxUXXRC053nEkb3/wBoa9yFEKvsH5HxMPrjiG95DDQXCw==
+
+bloem@^0.2.0:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/bloem/-/bloem-0.2.4.tgz#3c29ebed689b384f28304fa7bd56c6026e6d5879"
+  integrity sha512-9NC03n3Eaj+hkBalu+6GKRe6fkzHAfo5kUT0etwQXVAb1efDTx86aGnbimV4kEgWi52Perprr0TMWO3dTs8ayA==
+  dependencies:
+    bitbuffer "0.1.x"
+    fnv "0.1.x"
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -1689,6 +1709,11 @@ fn.name@1.x.x:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/fn.name/-/fn.name-1.1.0.tgz#26cad8017967aea8731bc42961d04a3d5988accc"
   integrity sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==
+
+fnv@0.1.x:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/fnv/-/fnv-0.1.3.tgz#5db30b83e97e7aea448cb36138bd936970a8700d"
+  integrity sha512-5TtgKckVqRRjybT6Yogzprs7Lz4yrsXazxxuZ2CJeUzKCP4yc2lHWemqnM/9BuEk4LWXCntNbesiBQly8c7IHw==
 
 for-each@^0.3.3:
   version "0.3.3"

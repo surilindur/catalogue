@@ -10,7 +10,7 @@
   "types": "lib/index",
   "main": "lib/index.js",
   "dependencies": {
-    "@catalogue/dataset-summary-generator": "^0.0.0",
+    "@catalogue/dataset-summary": "^0.0.0",
     "@catalogue/rdf-namespaces": "^0.0.0",
     "rdf-data-factory": "^1.0.0"
   }

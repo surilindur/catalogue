@@ -5,3 +5,5 @@ export interface IDatasetSummary {
   reset: () => void;
   toRdf: (dataset: string) => RDF.Quad[];
 }
+
+export interface IDatasetSummaryArgs {}

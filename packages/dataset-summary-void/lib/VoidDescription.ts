@@ -1,4 +1,4 @@
-import type { IDatasetSummary } from '@catalogue/dataset-summary-generator';
+import type { IDatasetSummary } from '@catalogue/dataset-summary';
 import { XSD_NS, RDF_NS, VoID_NS } from '@catalogue/rdf-namespaces';
 import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';
