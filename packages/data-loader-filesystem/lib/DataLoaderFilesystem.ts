@@ -11,7 +11,7 @@ export class DataLoaderFilesystem extends DataLoader {
 
   public constructor(args: IDataLoaderFilesystemArgs) {
     super(args);
-    this.root = resolve(args.root);
+    this.root = resolve(args.path);
     if (!existsSync(this.root)) {
       throw new Error(`The root path "${this.root}" does not exist`);
     }
@@ -57,6 +57,6 @@ export class DataLoaderFilesystem extends DataLoader {
 }
 
 export interface IDataLoaderFilesystemArgs extends IDataLoaderArgs {
-  root: string;
+  path: string;
   grouping: string;
 }

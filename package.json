@@ -18,7 +18,8 @@
     "build": "npm run build:ts && npm run build:components",
     "build:ts": "tsc",
     "build:components": "componentsjs-generator packages/* engines/*",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "generate:void": "node engines/catalogue/bin/catalogue-void.js"
   },
   "devDependencies": {
     "@rdfjs/types": "*",

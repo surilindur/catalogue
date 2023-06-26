@@ -1,27 +1,32 @@
 {
-  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/solidbench-summaries/^0.0.0/components/context.jsonld",
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/catalogue/^0.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/data-loader-filesystem/^0.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/dataset-summary-generator/^0.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/dataset-summary-void/^0.0.0/components/context.jsonld"
+  ],
   "@graph": [
     {
       "comment": "Default data loader",
-      "@id": "urn:solidbench-summaries:default:loader",
-      "@type": "DataLoader",
-      "root": "../solidbench",
-      "grouping": "pods\\/([0-9]+)\\/"
+      "@id": "urn:catalogue:loader:default",
+      "@type": "DataLoaderFilesystem",
+      "grouping": "pods\\/([0-9]+)\\/",
+      "path": "./solidbench"
     },
     {
       "comment": "Default VoID description summary",
-      "@id": "urn:solidbench-summaries:default:void",
+      "@id": "urn:catalogue:summary:void",
       "@type": "VoIDDescription"
     },
     {
       "comment": "Default summary generator",
-      "@id": "urn:solidbench-summaries:default:generator",
+      "@id": "urn:catalogue:generator:default",
       "@type": "SummaryGenerator",
       "loader": {
-        "@id": "urn:solidbench-summaries:default:loader"
+        "@id": "urn:catalogue:loader:default"
       },
       "summary": {
-        "@id": "urn:solidbench-summaries:default:void"
+        "@id": "urn:catalogue:summary:void"
       }
     }
   ]

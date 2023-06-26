@@ -2,13 +2,13 @@
   "name": "@catalogue/dataset-summary-generator",
   "version": "0.0.0",
   "description": "Dataset summary generator component",
-  "main": "index.js",
   "repository": "https://github.com/surilindur/catalogue",
   "author": "surilindur",
   "license": "MIT",
   "private": true,
   "lsd:module": true,
   "types": "lib/index",
+  "main": "lib/index.js",
   "dependencies": {
     "@catalogue/data-loader": "^0.0.0"
   }

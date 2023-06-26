@@ -8,6 +8,7 @@
   "private": true,
   "lsd:module": true,
   "types": "lib/index",
+  "main": "lib/index.js",
   "dependencies": {
     "@catalogue/data-loader": "^0.0.0",
     "@types/n3": "^1.0.0",

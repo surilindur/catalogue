@@ -2,7 +2,6 @@
   "name": "@catalogue/catalogue",
   "version": "0.0.0",
   "description": "Runner component",
-  "main": "index.js",
   "repository": "https://github.com/surilindur/catalogue",
   "author": "surilindur",
   "license": "MIT",
