@@ -1,0 +1,16 @@
+{
+  "name": "@catalogue/data-loader-filesystem",
+  "version": "0.0.0",
+  "description": "Filesystem-based data loader component",
+  "repository": "https://github.com/surilindur/catalogue",
+  "author": "surilindur",
+  "license": "MIT",
+  "private": true,
+  "lsd:module": true,
+  "types": "lib/index",
+  "dependencies": {
+    "@catalogue/data-loader": "^0.0.0",
+    "@types/n3": "^1.0.0",
+    "n3": "^1.0.0"
+  }
+}

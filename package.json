@@ -1,0 +1,32 @@
+{
+  "name": "catalogue",
+  "version": "0.0.0",
+  "description": "Experimental summary generation scripts for SolidBench",
+  "main": "index.js",
+  "repository": "https://github.com/surilindur/catalogue",
+  "author": "surilindur",
+  "lsd:module": true,
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "engines/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "jest ${1}",
+    "lint": "eslint . --ext .ts",
+    "build": "npm run build:ts && npm run build:components",
+    "build:ts": "tsc",
+    "build:components": "componentsjs-generator packages/* engines/*",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "@rdfjs/types": "*",
+    "@rubensworks/eslint-config": "^2.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "componentsjs-generator": "^3.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}

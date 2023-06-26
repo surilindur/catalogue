@@ -1,0 +1,13 @@
+node_modules/
+components/
+
+yarn-error.log
+componentsjs-error-state.json
+
+/engines/**/*.js
+/engines/**/*.js.map
+/engines/**/*.d.ts
+
+/packages/**/*.js
+/packages/**/*.js.map
+/packages/**/*.d.ts

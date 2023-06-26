@@ -1,0 +1,28 @@
+{
+  "@context": "https://linkedsoftwaredependencies.org/bundles/npm/solidbench-summaries/^0.0.0/components/context.jsonld",
+  "@graph": [
+    {
+      "comment": "Default data loader",
+      "@id": "urn:solidbench-summaries:default:loader",
+      "@type": "DataLoader",
+      "root": "../solidbench",
+      "grouping": "pods\\/([0-9]+)\\/"
+    },
+    {
+      "comment": "Default VoID description summary",
+      "@id": "urn:solidbench-summaries:default:void",
+      "@type": "VoIDDescription"
+    },
+    {
+      "comment": "Default summary generator",
+      "@id": "urn:solidbench-summaries:default:generator",
+      "@type": "SummaryGenerator",
+      "loader": {
+        "@id": "urn:solidbench-summaries:default:loader"
+      },
+      "summary": {
+        "@id": "urn:solidbench-summaries:default:void"
+      }
+    }
+  ]
+}
