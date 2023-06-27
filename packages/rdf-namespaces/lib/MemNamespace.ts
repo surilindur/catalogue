@@ -4,7 +4,10 @@ import { NamedNode } from 'rdf-data-factory';
 const mem_uri: RDF.NamedNode = new NamedNode('http://semweb.mmlab.be/ns/membership#');
 
 export const MEM_NS: Record<string, RDF.NamedNode> = {
-  filter: new NamedNode(`${mem_uri.value}filter`),
-  hashes: new NamedNode(`${mem_uri.value}filter`),
-  bits: new NamedNode(`${mem_uri.value}filter`),
+  binaryRepresentation: new NamedNode(`${mem_uri.value}binaryRepresentation`),
+  hashSize: new NamedNode(`${mem_uri.value}hashSize`),
+  bitSize: new NamedNode(`${mem_uri.value}bitSize`),
+  sourceCollection: new NamedNode(`${mem_uri.value}sourceCollection`),
+  ApproximateMembershipFunction: new NamedNode(`${mem_uri.value}ApproximateMembershipFunction`),
+  BloomFilter: new NamedNode(`${mem_uri.value}BloomFilter`),
 };

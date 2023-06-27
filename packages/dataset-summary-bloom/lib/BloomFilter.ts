@@ -1,5 +1,5 @@
 import type { IDatasetSummary, IDatasetSummaryArgs } from '@catalogue/dataset-summary';
-import { XSD_NS, RDF_NS, MEM_NS } from '@catalogue/rdf-namespaces';
+import { RDF_NS, MEM_NS, XSD_NS } from '@catalogue/rdf-namespaces';
 import type * as RDF from '@rdfjs/types';
 import { Bloem } from 'bloem';
 import { DataFactory } from 'rdf-data-factory';
@@ -17,11 +17,15 @@ export class BloomFilter implements IDatasetSummary {
   private graphBuffer: Buffer;
   private classBuffer: Buffer;
 
+  private combinedBuffer: Buffer;
+
   private subjectFilter: Bloem;
   private predicateFilter: Bloem;
   private objectFilter: Bloem;
   private graphFilter: Bloem;
   private classFilter: Bloem;
+
+  private combinedFilter: Bloem;
 
   public constructor(args: IBloomFilterArgs) {
     this.size = args.size;
@@ -31,11 +35,13 @@ export class BloomFilter implements IDatasetSummary {
     this.objectBuffer = Buffer.alloc(this.size);
     this.graphBuffer = Buffer.alloc(this.size);
     this.classBuffer = Buffer.alloc(this.size);
+    this.combinedBuffer = Buffer.alloc(this.size);
     this.subjectFilter = new Bloem(this.size, this.slices, this.subjectBuffer);
     this.predicateFilter = new Bloem(this.size, this.slices, this.predicateBuffer);
     this.objectFilter = new Bloem(this.size, this.slices, this.objectBuffer);
     this.graphFilter = new Bloem(this.size, this.slices, this.graphBuffer);
     this.classFilter = new Bloem(this.size, this.slices, this.classBuffer);
+    this.combinedFilter = new Bloem(this.size, this.slices, this.combinedBuffer);
   }
 
   public add(...quads: RDF.Quad[]): void {
@@ -50,98 +56,78 @@ export class BloomFilter implements IDatasetSummary {
     this.objectBuffer = Buffer.alloc(this.size);
     this.graphBuffer = Buffer.alloc(this.size);
     this.classBuffer = Buffer.alloc(this.size);
+    this.combinedBuffer = Buffer.alloc(this.size);
     this.subjectFilter = new Bloem(this.size, this.slices, this.subjectBuffer);
     this.predicateFilter = new Bloem(this.size, this.slices, this.predicateBuffer);
     this.objectFilter = new Bloem(this.size, this.slices, this.objectBuffer);
     this.graphFilter = new Bloem(this.size, this.slices, this.graphBuffer);
     this.classFilter = new Bloem(this.size, this.slices, this.classBuffer);
+    this.combinedFilter = new Bloem(this.size, this.slices, this.combinedBuffer);
   }
 
   private register(quad: RDF.Quad): void {
     const namedNodeToBuffer = (node: RDF.NamedNode): Buffer => Buffer.from(node.value, 'utf8');
     if (quad.subject.termType === 'NamedNode') {
-      this.subjectFilter.add(namedNodeToBuffer(quad.subject));
+      const value: Buffer = namedNodeToBuffer(quad.subject);
+      this.subjectFilter.add(value);
+      this.combinedFilter.add(value);
     }
     if (quad.predicate.termType === 'NamedNode') {
-      this.predicateFilter.add(namedNodeToBuffer(quad.predicate));
+      const value: Buffer = namedNodeToBuffer(quad.predicate);
+      this.predicateFilter.add(value);
+      this.combinedFilter.add(value);
       if (quad.predicate === RDF_NS.type && quad.object.termType === 'NamedNode') {
         this.classFilter.add(namedNodeToBuffer(quad.object));
       }
     }
     if (quad.object.termType === 'NamedNode') {
-      this.objectFilter.add(namedNodeToBuffer(quad.object));
+      const value: Buffer = namedNodeToBuffer(quad.object);
+      this.objectFilter.add(value);
+      this.combinedFilter.add(value);
     }
     if (quad.graph.termType === 'NamedNode') {
-      this.graphFilter.add(namedNodeToBuffer(quad.graph));
+      const value: Buffer = namedNodeToBuffer(quad.graph);
+      this.graphFilter.add(value);
+      this.combinedFilter.add(value);
     }
   }
 
   public toRdf(dataset: string): RDF.Quad[] {
     const factory: RDF.DataFactory = new DataFactory();
     const dataset_uri: RDF.NamedNode = factory.namedNode(dataset);
+    const filter_node: RDF.BlankNode = factory.blankNode();
     const output: RDF.Quad[] = [
       factory.quad(
-        dataset_uri,
-        MEM_NS.bits,
-        factory.literal(this.subjectFilter),
+        filter_node,
+        RDF_NS.type,
+        MEM_NS.ApproximateMembershipFunction,
       ),
       factory.quad(
-        dataset_uri,
-        VoID_NS.uriSpace,
-        factory.literal(dataset_uri.value),
+        filter_node,
+        RDF_NS.type,
+        MEM_NS.BloomFilter,
       ),
       factory.quad(
+        filter_node,
+        MEM_NS.sourceCollection,
         dataset_uri,
-        VoID_NS.triples,
-        factory.literal(this.triples.toString(10), XSD_NS.integer),
       ),
       factory.quad(
-        dataset_uri,
-        VoID_NS.properties,
-        factory.literal(this.predicateCardinalities.size.toString(10), XSD_NS.integer),
+        filter_node,
+        MEM_NS.binaryRepresentation,
+        factory.literal(this.combinedBuffer.toString('base64')),
       ),
       factory.quad(
-        dataset_uri,
-        VoID_NS.classes,
-        factory.literal(this.classCardinalities.size.toString(10), XSD_NS.integer),
+        filter_node,
+        MEM_NS.bitSize,
+        factory.literal(this.size.toString(10), XSD_NS.integer),
       ),
       factory.quad(
-        dataset_uri,
-        VoID_NS.distinctObjects,
-        factory.literal(this.objectCardinalities.size.toString(10), XSD_NS.integer),
+        filter_node,
+        MEM_NS.hashSize,
+        factory.literal(this.slices.toString(10), XSD_NS.integer),
       ),
-      factory.quad(
-        dataset_uri,
-        VoID_NS.distinctSubjects,
-        factory.literal(this.subjectCardinalities.size.toString(10), XSD_NS.integer),
-      ),
-      // This is not possible to implement this way :(
-      // factory.quad(
-      //   dataset,
-      //   VoID_NS.documents,
-      //   factory.literal(this.documents.toString(10), XSD_NS.integer),
-      // ),
     ];
-    for (const [ predicate, cardinality ] of this.predicateCardinalities) {
-      const predicateCardinality = factory.blankNode();
-      output.push(
-        factory.quad(
-          predicateCardinality,
-          VoID_NS.voidProperty,
-          predicate,
-        ),
-        factory.quad(
-          predicateCardinality,
-          VoID_NS.triples,
-          factory.literal(cardinality.toString(10), XSD_NS.integer),
-        ),
-        factory.quad(
-          dataset_uri,
-          VoID_NS.propertyPartition,
-          predicateCardinality,
-        ),
-      );
-    }
     return output;
   }
 }
