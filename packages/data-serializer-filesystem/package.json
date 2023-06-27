@@ -1,7 +1,7 @@
 {
-  "name": "@catalogue/data-loader-filesystem",
+  "name": "@catalogue/data-serializer-filesystem",
   "version": "0.0.0",
-  "description": "Filesystem-based data loader component",
+  "description": "Filesystem-based data serializer component",
   "repository": "https://github.com/surilindur/catalogue",
   "author": "surilindur",
   "license": "MIT",
@@ -10,7 +10,7 @@
   "types": "lib/index",
   "main": "lib/index.js",
   "dependencies": {
-    "@catalogue/data-loader": "^0.0.0",
+    "@catalogue/data-serializer": "^0.0.0",
     "n3": "^1.0.0"
   },
   "devDependencies": {
