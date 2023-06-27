@@ -19,6 +19,8 @@
     "build:ts": "tsc",
     "build:components": "componentsjs-generator packages/* engines/*",
     "prepare": "npm run build",
+    "solidbench:generate": "NODE_OPTIONS=--max-old-space-size=8192 solidbench generate",
+    "solidbench:serve": "solidbench serve",
     "generate:void": "node engines/catalogue/bin/catalogue-void.js"
   },
   "devDependencies": {
@@ -28,6 +30,7 @@
     "@typescript-eslint/parser": "^5.0.0",
     "componentsjs-generator": "^3.0.0",
     "eslint": "^8.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "solidbench": "^1.0.0"
   }
 }

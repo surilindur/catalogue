@@ -1,0 +1,14 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/data-loader-filesystem/^0.0.0/components/context.jsonld"
+  ],
+  "@graph": [
+    {
+      "comment": "Filesystem data loader",
+      "@id": "urn:catalogue:loader:filesystem",
+      "@type": "DataLoaderFilesystem",
+      "grouping": "(?<key>.*(?<path>\\/pods\\/[0-9]+\\/))",
+      "path": "./out-fragments/http/localhost_3000/pods"
+    }
+  ]
+}

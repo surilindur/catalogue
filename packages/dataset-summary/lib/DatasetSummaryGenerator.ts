@@ -1,13 +1,16 @@
 import type { IDataLoader } from '@catalogue/data-loader';
+import type { IDataSerializer } from '@catalogue/data-serializer';
 import type * as RDF from '@rdfjs/types';
 import type { IDatasetSummary } from './DatasetSummary';
 
 export class DatasetSummaryGenerator implements IDatasetSummaryGenerator {
   private readonly loader: IDataLoader;
+  private readonly serializer: IDataSerializer;
   private readonly summary: IDatasetSummary;
 
   public constructor(args: IDatasetSummaryGeneratorArgs) {
     this.loader = args.loader;
+    this.serializer = args.serializer;
     this.summary = args.summary;
   }
 
@@ -21,6 +24,7 @@ export class DatasetSummaryGenerator implements IDatasetSummaryGenerator {
       const output: RDF.Quad[] = this.summary.toRdf(dataset);
       // eslint-disable-next-line no-console
       console.log(output);
+      await this.serializer.serialize(dataset, output);
     }
   }
 }
@@ -31,5 +35,6 @@ export interface IDatasetSummaryGenerator {
 
 export interface IDatasetSummaryGeneratorArgs {
   loader: IDataLoader;
+  serializer: IDataSerializer;
   summary: IDatasetSummary;
 }

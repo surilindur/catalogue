@@ -1,0 +1,27 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/catalogue/^0.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/dataset-summary/^0.0.0/components/context.jsonld"
+  ],
+  "import": [
+    "cc:config/loader/filesystem.json",
+    "cc:config/serializer/filesystem.json",
+    "cc:config/summary/void.json"
+  ],
+  "@graph": [
+    {
+      "comment": "Default summary generator",
+      "@id": "urn:catalogue:generator:default",
+      "@type": "DatasetSummaryGenerator",
+      "loader": {
+        "@id": "urn:catalogue:loader:filesystem"
+      },
+      "serializer": {
+        "@id": "urn:catalogue:serializer:filesystem"
+      },
+      "summary": {
+        "@id": "urn:catalogue:summary:void"
+      }
+    }
+  ]
+}

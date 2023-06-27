@@ -1,8 +1,13 @@
+# Node modules and Components.js output
 node_modules/
 components/
 
+# Error logs
+
 yarn-error.log
 componentsjs-error-state.json
+
+# TypeScript compile output
 
 /engines/**/*.js
 /engines/**/*.js.map
@@ -11,3 +16,12 @@ componentsjs-error-state.json
 /packages/**/*.js
 /packages/**/*.js.map
 /packages/**/*.d.ts
+
+# SolidBench data
+out-enhanced/
+out-fragments/
+out-queries/
+out-snb/
+out-validate/
+out-validate-params/
+params.ini

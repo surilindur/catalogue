@@ -1,0 +1,15 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/data-serializer-filesystem/^0.0.0/components/context.jsonld"
+  ],
+  "@graph": [
+    {
+      "comment": "Filesystem data serializer",
+      "@id": "urn:catalogue:serializer:filesystem",
+      "@type": "DataSerializerFilesystem",
+      "format": "N-Quads",
+      "path": ".meta",
+      "dryrun": true
+    }
+  ]
+}
