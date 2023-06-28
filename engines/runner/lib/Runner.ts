@@ -1,5 +1,5 @@
 import { join, resolve } from 'node:path';
-import type { IDatasetSummaryGenerator } from '@catalogue/dataset-summary-generator';
+import type { IDatasetSummaryGenerator } from '@solidlab/catalogue-dataset-summary-generator';
 import { ComponentsManager } from 'componentsjs';
 
 const DEFAULT_CONFIG = '../config/default.json';

@@ -1,6 +1,6 @@
-import type { IDatasetSummary } from '@catalogue/dataset-summary';
-import { XSD_NS, RDF_NS, VoID_NS } from '@catalogue/rdf-namespaces';
 import type * as RDF from '@rdfjs/types';
+import type { IDatasetSummary } from '@solidlab/catalogue-dataset-summary';
+import { XSD_NS, RDF_NS, VoID_NS } from '@solidlab/catalogue-rdf-namespaces';
 import { DataFactory } from 'rdf-data-factory';
 
 /**

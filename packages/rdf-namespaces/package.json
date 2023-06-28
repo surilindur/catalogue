@@ -1,5 +1,5 @@
 {
-  "name": "@catalogue/rdf-namespaces",
+  "name": "@solidlab/catalogue-rdf-namespaces",
   "version": "0.0.0",
   "description": "Various RDF namespaces used within the tool",
   "repository": "https://github.com/surilindur/catalogue",

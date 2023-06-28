@@ -1,5 +1,5 @@
 {
-  "name": "@catalogue/data-loader-filesystem",
+  "name": "@solidlab/catalogue-data-loader-filesystem",
   "version": "0.0.0",
   "description": "Filesystem-based data loader component",
   "repository": "https://github.com/surilindur/catalogue",
@@ -10,7 +10,7 @@
   "types": "lib/index",
   "main": "lib/index.js",
   "dependencies": {
-    "@catalogue/data-loader": "^0.0.0",
+    "@solidlab/catalogue-data-loader": "^0.0.0",
     "n3": "^1.0.0"
   },
   "devDependencies": {

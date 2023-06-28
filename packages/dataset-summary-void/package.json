@@ -1,5 +1,5 @@
 {
-  "name": "@catalogue/dataset-summary-void",
+  "name": "@solidlab/catalogue-dataset-summary-void",
   "version": "0.0.0",
   "description": "VoID summary for dataset",
   "repository": "https://github.com/surilindur/catalogue",
@@ -10,8 +10,8 @@
   "types": "lib/index",
   "main": "lib/index.js",
   "dependencies": {
-    "@catalogue/dataset-summary": "^0.0.0",
-    "@catalogue/rdf-namespaces": "^0.0.0",
+    "@solidlab/catalogue-dataset-summary": "^0.0.0",
+    "@solidlab/catalogue-rdf-namespaces": "^0.0.0",
     "rdf-data-factory": "^1.0.0"
   }
 }

@@ -1,7 +1,7 @@
-import type { IDataLoader } from '@catalogue/data-loader';
-import type { IDataSerializer } from '@catalogue/data-serializer';
-import type { IDatasetSummary } from '@catalogue/dataset-summary';
 import type * as RDF from '@rdfjs/types';
+import type { IDataLoader } from '@solidlab/catalogue-data-loader';
+import type { IDataSerializer } from '@solidlab/catalogue-data-serializer';
+import type { IDatasetSummary } from '@solidlab/catalogue-dataset-summary';
 
 export class DatasetSummaryGenerator implements IDatasetSummaryGenerator {
   private readonly loader: IDataLoader;

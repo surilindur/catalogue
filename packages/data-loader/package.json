@@ -1,5 +1,5 @@
 {
-  "name": "@catalogue/data-loader",
+  "name": "@solidlab/catalogue-data-loader",
   "version": "0.0.0",
   "description": "Data loader component",
   "repository": "https://github.com/surilindur/catalogue",

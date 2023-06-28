@@ -1,5 +1,5 @@
 {
-  "name": "@catalogue/data-serializer",
+  "name": "@solidlab/catalogue-data-serializer",
   "version": "0.0.0",
   "description": "Data serializer component",
   "repository": "https://github.com/surilindur/catalogue",

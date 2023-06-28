@@ -1,7 +1,7 @@
 import { existsSync, lstatSync, readdirSync, readFileSync, type Stats } from 'node:fs';
 import { resolve, join, relative } from 'node:path';
-import { DataLoader, type IDataLoaderArgs } from '@catalogue/data-loader';
 import type * as RDF from '@rdfjs/types';
+import { DataLoader, type IDataLoaderArgs } from '@solidlab/catalogue-data-loader';
 import { Parser } from 'n3';
 
 export class DataLoaderFilesystem extends DataLoader {

@@ -1,5 +1,5 @@
 {
-  "name": "catalogue",
+  "name": "@solidlab/catalogue",
   "version": "0.0.0",
   "description": "Experimental summary generation scripts for SolidBench",
   "main": "index.js",

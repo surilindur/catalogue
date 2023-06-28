@@ -1,5 +1,5 @@
 {
-  "name": "@catalogue/dataset-summary",
+  "name": "@solidlab/catalogue-dataset-summary",
   "version": "0.0.0",
   "description": "Dataset summary base package",
   "repository": "https://github.com/surilindur/catalogue",
