@@ -1,17 +1,16 @@
 import { writeFileSync, existsSync } from 'node:fs';
 import { resolve, join } from 'node:path';
-import { DataSerializer, type IDataSerializerArgs } from '@catalogue/data-serializer';
+import { type IDataSerializer, type IDataSerializerArgs } from '@catalogue/data-serializer';
 import type * as RDF from '@rdfjs/types';
 import { Writer } from 'n3';
 
-export class DataSerializerFilesystem extends DataSerializer {
+export class DataSerializerFilesystem implements IDataSerializer {
   private readonly format: string;
   private readonly prefixes: Record<string, string> | undefined;
   private readonly path: string;
   private readonly dryrun: boolean;
 
   public constructor(args: IDataSerializerFilesystemArgs) {
-    super(args);
     this.format = args.format;
     this.prefixes = args.prefixes;
     this.path = args.path;

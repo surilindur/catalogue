@@ -1,5 +1,6 @@
 {
   "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/dataset-summary/^0.0.0/components/context.jsonld",
     "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/dataset-summary-void/^0.0.0/components/context.jsonld"
   ],
   "@graph": [

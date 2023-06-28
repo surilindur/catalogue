@@ -8,9 +8,5 @@
   "private": true,
   "lsd:module": true,
   "types": "lib/index",
-  "main": "lib/index.js",
-  "dependencies": {
-    "@catalogue/data-loader": "^0.0.0",
-    "@catalogue/data-serializer": "^0.0.0"
-  }
+  "main": "lib/index.js"
 }

@@ -1,12 +1,12 @@
 {
   "@context": [
     "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/catalogue/^0.0.0/components/context.jsonld",
-    "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/dataset-summary/^0.0.0/components/context.jsonld"
+    "https://linkedsoftwaredependencies.org/bundles/npm/@catalogue/dataset-summary-generator/^0.0.0/components/context.jsonld"
   ],
   "import": [
-    "cc:config/loader/filesystem.json",
-    "cc:config/serializer/filesystem.json",
-    "cc:config/summary/void.json"
+    "loader/filesystem.json",
+    "serializer/filesystem.json",
+    "summary/void.json"
   ],
   "@graph": [
     {

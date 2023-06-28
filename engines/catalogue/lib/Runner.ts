@@ -1,5 +1,5 @@
 import { join, resolve } from 'node:path';
-import type { DatasetSummaryGenerator } from '@catalogue/dataset-summary';
+import type { IDatasetSummaryGenerator } from '@catalogue/dataset-summary-generator';
 import { ComponentsManager } from 'componentsjs';
 
 const DEFAULT_CONFIG = '../config/default.json';
@@ -17,6 +17,6 @@ export async function runApp(): Promise<void> {
   // eslint-disable-next-line no-console
   console.log(configPath);
   await manager.configRegistry.register(configPath);
-  const generator: DatasetSummaryGenerator = await manager.instantiate<DatasetSummaryGenerator>(DEFAULT_GENERATOR);
+  const generator: IDatasetSummaryGenerator = await manager.instantiate(DEFAULT_GENERATOR);
   await generator.run();
 }

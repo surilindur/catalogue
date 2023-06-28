@@ -12,6 +12,7 @@
     "@catalogue/dataset-summary": "^0.0.0",
     "@catalogue/dataset-summary-void": "^0.0.0",
     "@catalogue/dataset-summary-bloom": "^0.0.0",
+    "@catalogue/dataset-summary-generator": "^0.0.0",
     "@catalogue/data-loader": "^0.0.0",
     "@catalogue/data-loader-filesystem": "^0.0.0",
     "@catalogue/data-serializer": "^0.0.0",
