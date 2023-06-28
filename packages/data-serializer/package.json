@@ -7,6 +7,6 @@
   "license": "MIT",
   "private": true,
   "lsd:module": true,
-  "types": "lib/index",
+  "typings": "lib/index",
   "main": "lib/index.js"
 }

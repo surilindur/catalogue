@@ -1,16 +1,17 @@
 import { writeFileSync, existsSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import type * as RDF from '@rdfjs/types';
-import { type IDataSerializer, type IDataSerializerArgs } from '@solidlab/catalogue-data-serializer';
+import { DataSerializer, type IDataSerializerArgs } from '@solidlab/catalogue-data-serializer';
 import { Writer } from 'n3';
 
-export class DataSerializerFilesystem implements IDataSerializer {
+export class DataSerializerFilesystem extends DataSerializer {
   private readonly format: string;
   private readonly prefixes: Record<string, string> | undefined;
   private readonly path: string;
   private readonly dryrun: boolean;
 
   public constructor(args: IDataSerializerFilesystemArgs) {
+    super(args);
     this.format = args.format;
     this.prefixes = args.prefixes;
     this.path = args.path;
@@ -36,7 +37,7 @@ export class DataSerializerFilesystem implements IDataSerializer {
 
 export interface IDataSerializerFilesystemArgs extends IDataSerializerArgs {
   format: string;
-  prefixes: Record<string, string> | undefined;
+  prefixes?: Record<string, string>;
   path: string;
   dryrun: boolean;
 }
