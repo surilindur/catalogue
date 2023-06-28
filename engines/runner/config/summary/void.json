@@ -1,0 +1,13 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/catalogue-dataset-summary/^0.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/catalogue-dataset-summary-void/^0.0.0/components/context.jsonld"
+  ],
+  "@graph": [
+    {
+      "comment": "VoID description summary",
+      "@id": "urn:catalogue:summary:void",
+      "@type": "VoIDDescription"
+    }
+  ]
+}

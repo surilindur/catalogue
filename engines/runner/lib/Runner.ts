@@ -2,7 +2,7 @@ import { join, resolve } from 'node:path';
 import type { IDatasetSummaryGenerator } from '@solidlab/catalogue-dataset-summary-generator';
 import { ComponentsManager } from 'componentsjs';
 
-const DEFAULT_CONFIG = '../config/default.json';
+const DEFAULT_CONFIG = '../config/void.json';
 const DEFAULT_GENERATOR = 'urn:catalogue:generator:default';
 
 export async function runApp(): Promise<void> {

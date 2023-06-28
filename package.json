@@ -21,7 +21,7 @@
     "prepare": "npm run build",
     "solidbench:generate": "NODE_OPTIONS=--max-old-space-size=8192 solidbench generate",
     "solidbench:serve": "solidbench serve",
-    "generate:void": "node engines/catalogue/bin/catalogue-void.js"
+    "generate:void": "node engines/runner/bin/catalogue-void.js"
   },
   "devDependencies": {
     "@rdfjs/types": "*",
