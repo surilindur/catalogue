@@ -1,1 +1,1 @@
-export * from './BloomFilter';
+export * from './DatasetSummaryBloom';
