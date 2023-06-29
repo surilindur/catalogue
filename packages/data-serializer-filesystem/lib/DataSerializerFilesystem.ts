@@ -28,7 +28,7 @@ export class DataSerializerFilesystem extends DataSerializer {
       } else {
         // eslint-disable-next-line no-console
         console.log(`Delete: ${serializationPath}`);
-        unlinkSync(target);
+        unlinkSync(serializationPath);
       }
     }
     const writer: Writer = new Writer({ format: this.format, prefixes: this.prefixes });
