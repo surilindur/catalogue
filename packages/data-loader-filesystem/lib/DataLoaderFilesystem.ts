@@ -50,6 +50,8 @@ export class DataLoaderFilesystem extends DataLoader {
   }
 
   private async loadFile(path: string): Promise<void> {
+    // eslint-disable-next-line no-console
+    console.log(`Load: ${path}`);
     const key: string = this.getGroupingKey(path);
     const parser: Parser = new Parser();
     const fileContents: string = readFileSync(path, { encoding: 'utf-8' });
