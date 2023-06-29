@@ -1,4 +1,4 @@
-import { writeFileSync, existsSync } from 'node:fs';
+import { writeFileSync, existsSync, unlinkSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import type * as RDF from '@rdfjs/types';
 import { DataSerializer, type IDataSerializerArgs } from '@solidlab/catalogue-data-serializer';
@@ -9,6 +9,7 @@ export class DataSerializerFilesystem extends DataSerializer {
   private readonly prefixes: Record<string, string> | undefined;
   private readonly path: string;
   private readonly dryrun: boolean;
+  private readonly overwrite: boolean;
 
   public constructor(args: IDataSerializerFilesystemArgs) {
     super(args);
@@ -16,12 +17,17 @@ export class DataSerializerFilesystem extends DataSerializer {
     this.prefixes = args.prefixes;
     this.path = args.path;
     this.dryrun = args.dryrun;
+    this.overwrite = args.overwrite;
   }
 
   public async serialize(target: string, data: RDF.Quad[]): Promise<boolean> {
     const serializationPath = resolve(join(target, this.path));
     if (!this.dryrun && existsSync(serializationPath)) {
-      throw new Error(`Target already exists: ${serializationPath}`);
+      if (!this.overwrite) {
+        throw new Error(`Target already exists: ${serializationPath}`);
+      } else {
+        unlinkSync(target);
+      }
     }
     const writer: Writer = new Writer({ format: this.format, prefixes: this.prefixes });
     const output: string = writer.quadsToString(data);
@@ -40,4 +46,5 @@ export interface IDataSerializerFilesystemArgs extends IDataSerializerArgs {
   prefixes?: Record<string, string>;
   path: string;
   dryrun: boolean;
+  overwrite: boolean;
 }
