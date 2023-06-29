@@ -78,7 +78,7 @@ export class DatasetSummaryBloom extends DatasetSummary {
   public toRdf(dataset: string): RDF.Quad[] {
     const factory: RDF.DataFactory = new DataFactory();
     const dataset_uri: RDF.NamedNode = factory.namedNode(this.replaceDatasetKeyValues(dataset));
-    const filter_node: RDF.BlankNode = factory.blankNode();
+    const filter_node: RDF.NamedNode = factory.namedNode(`${dataset_uri.value}#bloomfilter`);
     const output: RDF.Quad[] = [
       factory.quad(
         filter_node,
