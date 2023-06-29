@@ -8,8 +8,8 @@
       "comment": "Bloom filter summary",
       "@id": "urn:catalogue:summary:bloom",
       "@type": "DatasetSummaryBloom",
-      "keyReplacementPattern": "^(?<path>.*)\\/pods\\/[0-9]+\\/",
-      "keyReplacementValue": "http://localhost:3000"
+      "keyReplacementPattern": "^.*(\\/pods\\/[0-9]+\\/)",
+      "keyReplacementValue": "http://localhost:3000$1"
     }
   ]
 }

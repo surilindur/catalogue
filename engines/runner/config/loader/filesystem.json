@@ -9,7 +9,7 @@
       "@id": "urn:catalogue:loader:filesystem",
       "@type": "DataLoaderFilesystem",
       "grouping": "^(?<key>.*(?<path>\\/pods\\/[0-9]+\\/))",
-      "groupingLog": true,
+      "groupingLog": false,
       "path": "./out-fragments/http/localhost_3000/pods"
     }
   ]

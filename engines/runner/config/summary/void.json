@@ -8,8 +8,8 @@
       "comment": "VoID description summary",
       "@id": "urn:catalogue:summary:void",
       "@type": "DatasetSummaryVoid",
-      "keyReplacementPattern": "^(?<path>.*)\\/pods\\/[0-9]+\\/",
-      "keyReplacementValue": "http://localhost:3000"
+      "keyReplacementPattern": "^.*(\\/pods\\/[0-9]+\\/)",
+      "keyReplacementValue": "http://localhost:3000$1"
     }
   ]
 }
