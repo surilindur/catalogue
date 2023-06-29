@@ -10,7 +10,7 @@
       "@type": "DataSerializerFilesystem",
       "format": "N-Quads",
       "path": ".meta",
-      "dryrun": true,
+      "dryrun": false,
       "overwrite": false
     }
   ]

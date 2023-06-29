@@ -26,6 +26,8 @@ export class DataSerializerFilesystem extends DataSerializer {
       if (!this.overwrite) {
         throw new Error(`Target already exists: ${serializationPath}`);
       } else {
+        // eslint-disable-next-line no-console
+        console.log(`Delete: ${serializationPath}`);
         unlinkSync(target);
       }
     }
@@ -35,6 +37,8 @@ export class DataSerializerFilesystem extends DataSerializer {
       // eslint-disable-next-line no-console
       console.log(serializationPath, output.split('\n'));
     } else {
+      // eslint-disable-next-line no-console
+      console.log(`Serialize: ${serializationPath}`);
       writeFileSync(serializationPath, output);
     }
     return true;
