@@ -11,14 +11,6 @@ export class DatasetSummaryBloom extends DatasetSummary {
   private readonly size: number;
   private readonly slices: number;
 
-  private subjectBuffer: Buffer;
-  private predicateBuffer: Buffer;
-  private objectBuffer: Buffer;
-  private graphBuffer: Buffer;
-  private classBuffer: Buffer;
-
-  private combinedBuffer: Buffer;
-
   private subjectFilter: Bloem;
   private predicateFilter: Bloem;
   private objectFilter: Bloem;
@@ -31,18 +23,13 @@ export class DatasetSummaryBloom extends DatasetSummary {
     super(args);
     this.size = args.size;
     this.slices = args.slices;
-    this.subjectBuffer = Buffer.alloc(this.size);
-    this.predicateBuffer = Buffer.alloc(this.size);
-    this.objectBuffer = Buffer.alloc(this.size);
-    this.graphBuffer = Buffer.alloc(this.size);
-    this.classBuffer = Buffer.alloc(this.size);
-    this.combinedBuffer = Buffer.alloc(this.size);
-    this.subjectFilter = new Bloem(this.size, this.slices, this.subjectBuffer);
-    this.predicateFilter = new Bloem(this.size, this.slices, this.predicateBuffer);
-    this.objectFilter = new Bloem(this.size, this.slices, this.objectBuffer);
-    this.graphFilter = new Bloem(this.size, this.slices, this.graphBuffer);
-    this.classFilter = new Bloem(this.size, this.slices, this.classBuffer);
-    this.combinedFilter = new Bloem(this.size, this.slices, this.combinedBuffer);
+    const zeroFilledBuffer: Buffer = Buffer.alloc(this.size);
+    this.subjectFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
+    this.predicateFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
+    this.objectFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
+    this.graphFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
+    this.classFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
+    this.combinedFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
   }
 
   public add(...quads: RDF.Quad[]): void {
@@ -52,18 +39,13 @@ export class DatasetSummaryBloom extends DatasetSummary {
   }
 
   public reset(): void {
-    this.subjectBuffer = Buffer.alloc(this.size);
-    this.predicateBuffer = Buffer.alloc(this.size);
-    this.objectBuffer = Buffer.alloc(this.size);
-    this.graphBuffer = Buffer.alloc(this.size);
-    this.classBuffer = Buffer.alloc(this.size);
-    this.combinedBuffer = Buffer.alloc(this.size);
-    this.subjectFilter = new Bloem(this.size, this.slices, this.subjectBuffer);
-    this.predicateFilter = new Bloem(this.size, this.slices, this.predicateBuffer);
-    this.objectFilter = new Bloem(this.size, this.slices, this.objectBuffer);
-    this.graphFilter = new Bloem(this.size, this.slices, this.graphBuffer);
-    this.classFilter = new Bloem(this.size, this.slices, this.classBuffer);
-    this.combinedFilter = new Bloem(this.size, this.slices, this.combinedBuffer);
+    const zeroFilledBuffer: Buffer = Buffer.alloc(this.size);
+    this.subjectFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
+    this.predicateFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
+    this.objectFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
+    this.graphFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
+    this.classFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
+    this.combinedFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
   }
 
   private register(quad: RDF.Quad): void {
@@ -116,7 +98,7 @@ export class DatasetSummaryBloom extends DatasetSummary {
       factory.quad(
         filter_node,
         MEM_NS.binaryRepresentation,
-        factory.literal(this.combinedBuffer.toString('base64')),
+        factory.literal((<any> this.combinedFilter).bitfield.buffer.toString('base64')),
       ),
       factory.quad(
         filter_node,
