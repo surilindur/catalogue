@@ -3,8 +3,8 @@
 
 <svg
    width="400"
-   height="100"
-   viewBox="0 0 105.83333 26.458333"
+   height="140"
+   viewBox="0 0 105.83333 37.041666"
    version="1.1"
    id="svg5"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
@@ -25,8 +25,8 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="1"
-     inkscape:cx="274.5"
-     inkscape:cy="79.5"
+     inkscape:cx="275.5"
+     inkscape:cy="80.5"
      inkscape:window-width="1920"
      inkscape:window-height="1013"
      inkscape:window-x="0"
@@ -41,7 +41,7 @@
      id="layer1">
     <g
        id="g118"
-       transform="translate(-45.236318,-20.848813)">
+       transform="translate(-45.236318,-15.557146)">
       <path
          id="path586"
          style="fill:#000000;stroke:none;stroke-width:0.179453"
