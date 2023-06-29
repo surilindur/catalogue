@@ -7,6 +7,7 @@ import { Parser } from 'n3';
 export class DataLoaderFilesystem extends DataLoader {
   private readonly root: string;
   private readonly groupingExpression: RegExp;
+  private readonly groupingLog: boolean;
   private readonly data: Map<string, RDF.Quad[]>;
 
   public constructor(args: IDataLoaderFilesystemArgs) {
@@ -16,6 +17,7 @@ export class DataLoaderFilesystem extends DataLoader {
       throw new Error(`The root path "${this.root}" does not exist`);
     }
     this.groupingExpression = new RegExp(args.grouping, 'u');
+    this.groupingLog = args.groupingLog;
     this.data = new Map();
   }
 
@@ -28,7 +30,11 @@ export class DataLoaderFilesystem extends DataLoader {
 
   private getGroupingKey(path: string): string {
     const relativeToRoot: string = relative(this.root, path);
-    const match = this.groupingExpression.exec(relativeToRoot)?.groups;
+    const match = this.groupingExpression.exec(path)?.groups;
+    if (this.groupingLog) {
+      // eslint-disable-next-line no-console
+      console.log('Group:', { path, match: match !== undefined, key: match?.key ?? relativeToRoot });
+    }
     return match !== undefined ? match.key : relativeToRoot;
   }
 
@@ -59,4 +65,5 @@ export class DataLoaderFilesystem extends DataLoader {
 export interface IDataLoaderFilesystemArgs extends IDataLoaderArgs {
   path: string;
   grouping: string;
+  groupingLog: boolean;
 }

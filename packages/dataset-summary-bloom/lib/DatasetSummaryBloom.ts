@@ -1,5 +1,5 @@
 import type * as RDF from '@rdfjs/types';
-import type { IDatasetSummary, IDatasetSummaryArgs } from '@solidlab/catalogue-dataset-summary';
+import { DatasetSummary, type IDatasetSummaryArgs } from '@solidlab/catalogue-dataset-summary';
 import { RDF_NS, MEM_NS, XSD_NS } from '@solidlab/catalogue-rdf-namespaces';
 import { Bloem } from 'bloem';
 import { DataFactory } from 'rdf-data-factory';
@@ -7,7 +7,7 @@ import { DataFactory } from 'rdf-data-factory';
 /**
  * Class for generating a Bloom filter for a dataset.
  */
-export class BloomFilter implements IDatasetSummary {
+export class DatasetSummaryBloom extends DatasetSummary {
   private readonly size: number;
   private readonly slices: number;
 
@@ -28,6 +28,7 @@ export class BloomFilter implements IDatasetSummary {
   private combinedFilter: Bloem;
 
   public constructor(args: IBloomFilterArgs) {
+    super(args);
     this.size = args.size;
     this.slices = args.slices;
     this.subjectBuffer = Buffer.alloc(this.size);
@@ -94,7 +95,7 @@ export class BloomFilter implements IDatasetSummary {
 
   public toRdf(dataset: string): RDF.Quad[] {
     const factory: RDF.DataFactory = new DataFactory();
-    const dataset_uri: RDF.NamedNode = factory.namedNode(dataset);
+    const dataset_uri: RDF.NamedNode = factory.namedNode(this.replaceDatasetKeyValues(dataset));
     const filter_node: RDF.BlankNode = factory.blankNode();
     const output: RDF.Quad[] = [
       factory.quad(

@@ -11,6 +11,7 @@ export async function runApp(): Promise<void> {
   const manager = await ComponentsManager.build({
     // Path to npm package's root
     mainModulePath,
+    typeChecking: false,
   });
   // eslint-disable-next-line no-console
   console.log(mainModulePath);

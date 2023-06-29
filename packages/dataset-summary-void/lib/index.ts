@@ -1,1 +1,1 @@
-export * from './VoidDescription';
+export * from './DatasetSummaryVoid';

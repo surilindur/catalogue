@@ -27,7 +27,7 @@ export class DataSerializerFilesystem extends DataSerializer {
     const output: string = writer.quadsToString(data);
     if (this.dryrun) {
       // eslint-disable-next-line no-console
-      console.log(serializationPath, output);
+      console.log(serializationPath, output.split('\n'));
     } else {
       writeFileSync(serializationPath, output);
     }

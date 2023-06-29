@@ -16,14 +16,10 @@ export class DatasetSummaryGenerator implements IDatasetSummaryGenerator {
 
   public async run(): Promise<void> {
     const data: Map<string, RDF.Quad[]> = await this.loader.load();
-    // eslint-disable-next-line no-console
-    console.log(data);
     for (const [ dataset, quads ] of data) {
       this.summary.reset();
       this.summary.add(...quads);
       const output: RDF.Quad[] = this.summary.toRdf(dataset);
-      // eslint-disable-next-line no-console
-      console.log(output);
       await this.serializer.serialize(dataset, output);
     }
   }

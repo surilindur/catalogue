@@ -1,5 +1,5 @@
 import type * as RDF from '@rdfjs/types';
-import type { IDatasetSummary } from '@solidlab/catalogue-dataset-summary';
+import { DatasetSummary, type IDatasetSummaryArgs } from '@solidlab/catalogue-dataset-summary';
 import { XSD_NS, RDF_NS, VoID_NS } from '@solidlab/catalogue-rdf-namespaces';
 import { DataFactory } from 'rdf-data-factory';
 
@@ -8,7 +8,7 @@ import { DataFactory } from 'rdf-data-factory';
  * for a dataset by instantiating it with the dataset URI and registering triples.
  * See: https://www.w3.org/TR/void/
  */
-export class VoIDDescription implements IDatasetSummary {
+export class DatasetSummaryVoid extends DatasetSummary {
   private readonly subjectCardinalities: Map<RDF.NamedNode, number>;
   private readonly predicateCardinalities: Map<RDF.NamedNode, number>;
   private readonly objectCardinalities: Map<RDF.NamedNode, number>;
@@ -17,7 +17,8 @@ export class VoIDDescription implements IDatasetSummary {
 
   private triples: number;
 
-  public constructor() {
+  public constructor(args: IDatasetSummaryArgs) {
+    super(args);
     this.triples = 0;
     this.subjectCardinalities = new Map();
     this.predicateCardinalities = new Map();
@@ -77,7 +78,7 @@ export class VoIDDescription implements IDatasetSummary {
 
   public toRdf(dataset: string): RDF.Quad[] {
     const factory: RDF.DataFactory = new DataFactory();
-    const dataset_uri: RDF.NamedNode = factory.namedNode(dataset);
+    const dataset_uri: RDF.NamedNode = factory.namedNode(this.replaceDatasetKeyValues(dataset));
     const output: RDF.Quad[] = [
       factory.quad(
         dataset_uri,
@@ -125,19 +126,19 @@ export class VoIDDescription implements IDatasetSummary {
       const predicateCardinality = factory.blankNode();
       output.push(
         factory.quad(
+          dataset_uri,
+          VoID_NS.propertyPartition,
           predicateCardinality,
-          VoID_NS.voidProperty,
+        ),
+        factory.quad(
+          predicateCardinality,
+          VoID_NS.property,
           predicate,
         ),
         factory.quad(
           predicateCardinality,
           VoID_NS.triples,
           factory.literal(cardinality.toString(10), XSD_NS.integer),
-        ),
-        factory.quad(
-          dataset_uri,
-          VoID_NS.propertyPartition,
-          predicateCardinality,
         ),
       );
     }
