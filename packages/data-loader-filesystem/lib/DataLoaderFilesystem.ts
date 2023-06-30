@@ -40,7 +40,10 @@ export class DataLoaderFilesystem extends DataLoader {
 
   private async loadPath(path: string): Promise<void> {
     const stat: Stats = lstatSync(path);
-    if (stat.isDirectory()) {
+    if (path.endsWith('.meta')) {
+      // eslint-disable-next-line no-console
+      console.log(`Skip: ${path}`);
+    } else if (stat.isDirectory()) {
       for (const entry of readdirSync(path)) {
         await this.loadPath(join(path, entry));
       }

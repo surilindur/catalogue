@@ -9,22 +9,22 @@ import { DataFactory } from 'rdf-data-factory';
  * See: https://www.w3.org/TR/void/
  */
 export class DatasetSummaryVoid extends DatasetSummary {
-  private readonly subjectCardinalities: Map<RDF.NamedNode, number>;
-  private readonly predicateCardinalities: Map<RDF.NamedNode, number>;
-  private readonly objectCardinalities: Map<RDF.NamedNode, number>;
-  private readonly graphCardinalities: Map<RDF.NamedNode, number>;
-  private readonly classCardinalities: Map<RDF.NamedNode, number>;
+  private subjectCardinalities: Record<string, number>;
+  private predicateCardinalities: Record<string, number>;
+  private objectCardinalities: Record<string, number>;
+  private graphCardinalities: Record<string, number>;
+  private classCardinalities: Record<string, number>;
 
   private triples: number;
 
   public constructor(args: IDatasetSummaryArgs) {
     super(args);
     this.triples = 0;
-    this.subjectCardinalities = new Map();
-    this.predicateCardinalities = new Map();
-    this.objectCardinalities = new Map();
-    this.graphCardinalities = new Map();
-    this.classCardinalities = new Map();
+    this.subjectCardinalities = {};
+    this.predicateCardinalities = {};
+    this.objectCardinalities = {};
+    this.graphCardinalities = {};
+    this.classCardinalities = {};
   }
 
   public add(...quads: RDF.Quad[]): void {
@@ -35,44 +35,29 @@ export class DatasetSummaryVoid extends DatasetSummary {
 
   public reset(): void {
     this.triples = 0;
-    this.subjectCardinalities.clear();
-    this.predicateCardinalities.clear();
-    this.objectCardinalities.clear();
-    this.graphCardinalities.clear();
-    this.classCardinalities.clear();
+    this.subjectCardinalities = {};
+    this.predicateCardinalities = {};
+    this.objectCardinalities = {};
+    this.graphCardinalities = {};
+    this.classCardinalities = {};
   }
 
   private register(quad: RDF.Quad): void {
     this.triples++;
     if (quad.subject.termType === 'NamedNode') {
-      this.subjectCardinalities.set(
-        quad.subject,
-        (this.subjectCardinalities.get(quad.subject) ?? 0) + 1,
-      );
+      this.subjectCardinalities[quad.subject.value] = (this.subjectCardinalities[quad.subject.value] ?? 0) + 1;
     }
     if (quad.predicate.termType === 'NamedNode') {
-      this.predicateCardinalities.set(
-        quad.predicate,
-        (this.predicateCardinalities.get(quad.predicate) ?? 0) + 1,
-      );
+      this.predicateCardinalities[quad.predicate.value] = (this.predicateCardinalities[quad.predicate.value] ?? 0) + 1;
       if (quad.predicate === RDF_NS.type && quad.object.termType === 'NamedNode') {
-        this.classCardinalities.set(
-          quad.object,
-          (this.classCardinalities.get(quad.object) ?? 0) + 1,
-        );
+        this.classCardinalities[quad.object.value] = (this.classCardinalities[quad.object.value] ?? 0) + 1;
       }
     }
     if (quad.object.termType === 'NamedNode') {
-      this.predicateCardinalities.set(
-        quad.object,
-        (this.objectCardinalities.get(quad.object) ?? 0) + 1,
-      );
+      this.objectCardinalities[quad.object.value] = (this.objectCardinalities[quad.object.value] ?? 0) + 1;
     }
     if (quad.graph.termType === 'NamedNode') {
-      this.predicateCardinalities.set(
-        quad.graph,
-        (this.graphCardinalities.get(quad.graph) ?? 0) + 1,
-      );
+      this.graphCardinalities[quad.graph.value] = (this.graphCardinalities[quad.graph.value] ?? 0) + 1;
     }
   }
 
@@ -98,22 +83,22 @@ export class DatasetSummaryVoid extends DatasetSummary {
       factory.quad(
         dataset_uri,
         VoID_NS.properties,
-        factory.literal(this.predicateCardinalities.size.toString(10), XSD_NS.integer),
+        factory.literal(Object.keys(this.predicateCardinalities).length.toString(10), XSD_NS.integer),
       ),
       factory.quad(
         dataset_uri,
         VoID_NS.classes,
-        factory.literal(this.classCardinalities.size.toString(10), XSD_NS.integer),
+        factory.literal(Object.keys(this.classCardinalities).length.toString(10), XSD_NS.integer),
       ),
       factory.quad(
         dataset_uri,
         VoID_NS.distinctObjects,
-        factory.literal(this.objectCardinalities.size.toString(10), XSD_NS.integer),
+        factory.literal(Object.keys(this.objectCardinalities).length.toString(10), XSD_NS.integer),
       ),
       factory.quad(
         dataset_uri,
         VoID_NS.distinctSubjects,
-        factory.literal(this.subjectCardinalities.size.toString(10), XSD_NS.integer),
+        factory.literal(Object.keys(this.subjectCardinalities).length.toString(10), XSD_NS.integer),
       ),
       // This is not possible to implement this way :(
       // factory.quad(
@@ -122,7 +107,7 @@ export class DatasetSummaryVoid extends DatasetSummary {
       //   factory.literal(this.documents.toString(10), XSD_NS.integer),
       // ),
     ];
-    for (const [ predicate, cardinality ] of this.predicateCardinalities) {
+    for (const [ predicate, cardinality ] of Object.entries(this.predicateCardinalities)) {
       const predicateCardinality = factory.blankNode();
       output.push(
         factory.quad(
@@ -133,7 +118,7 @@ export class DatasetSummaryVoid extends DatasetSummary {
         factory.quad(
           predicateCardinality,
           VoID_NS.property,
-          predicate,
+          factory.namedNode(predicate),
         ),
         factory.quad(
           predicateCardinality,
