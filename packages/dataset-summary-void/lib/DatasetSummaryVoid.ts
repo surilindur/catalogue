@@ -49,7 +49,7 @@ export class DatasetSummaryVoid extends DatasetSummary {
     }
     if (quad.predicate.termType === 'NamedNode') {
       this.predicateCardinalities[quad.predicate.value] = (this.predicateCardinalities[quad.predicate.value] ?? 0) + 1;
-      if (quad.predicate === RDF_NS.type && quad.object.termType === 'NamedNode') {
+      if (quad.predicate.value === RDF_NS.type.value && quad.object.termType === 'NamedNode') {
         this.classCardinalities[quad.object.value] = (this.classCardinalities[quad.object.value] ?? 0) + 1;
       }
     }

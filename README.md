@@ -58,7 +58,7 @@ Example VoID description for a pod, truncated due to length:
 <http://localhost:3000/pods/00000000000000000065/> <http://rdfs.org/ns/void#uriSpace> "http://localhost:3000/pods/00000000000000000065/" .
 <http://localhost:3000/pods/00000000000000000065/> <http://rdfs.org/ns/void#triples> "2936"^^<http://www.w3.org/2001/XMLSchema#integer> .
 <http://localhost:3000/pods/00000000000000000065/> <http://rdfs.org/ns/void#properties> "33"^^<http://www.w3.org/2001/XMLSchema#integer> .
-<http://localhost:3000/pods/00000000000000000065/> <http://rdfs.org/ns/void#classes> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://localhost:3000/pods/00000000000000000065/> <http://rdfs.org/ns/void#classes> "7"^^<http://www.w3.org/2001/XMLSchema#integer> .
 <http://localhost:3000/pods/00000000000000000065/> <http://rdfs.org/ns/void#distinctObjects> "107"^^<http://www.w3.org/2001/XMLSchema#integer> .
 <http://localhost:3000/pods/00000000000000000065/> <http://rdfs.org/ns/void#distinctSubjects> "329"^^<http://www.w3.org/2001/XMLSchema#integer> .
 
@@ -76,6 +76,9 @@ _:df_1654_11 <http://rdfs.org/ns/void#triples> "309"^^<http://www.w3.org/2001/XM
 <http://localhost:3000/pods/00000000000000000065/> <http://rdfs.org/ns/void#propertyPartition> _:df_1654_12 .
 _:df_1654_12 <http://rdfs.org/ns/void#property> <http://www.w3.org/2000/01/rdf-schema#seeAlso> .
 _:df_1654_12 <http://rdfs.org/ns/void#triples> "309"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://localhost:3000/pods/00000000000000000065/> <http://rdfs.org/ns/void#propertyPartition> _:df_1654_13 .
+_:df_1654_13 <http://rdfs.org/ns/void#property> <http://www.w3.org/ns/pim/space#storage> .
+_:df_1654_13 <http://rdfs.org/ns/void#triples> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
 
 ...
 ```
