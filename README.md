@@ -17,10 +17,17 @@ After cloning the repository, it should be sufficient to install the dependencie
 
     yarn install --frozen-lockfile --ignore-engines
 
-The packages should be built automatically. To generate SolidBench data and VoID description:
+The packages should be built automatically. To generate SolidBench data:
 
     yarn solidbench:generate
+
+The VoID descriptions can be generated with:
+
     yarn catalogue --config ./engines/runner/config/void.json
+
+The Bloom filters can be generated with:
+
+    yarn catalogue --config ./engines/runner/config/bloom.json
 
 The configurations for the summary generator are in [engines/runner/config](engines/runner/config).
 
