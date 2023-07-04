@@ -9,5 +9,6 @@ export const MEM_NS: Record<string, RDF.NamedNode> = {
   bitSize: new NamedNode(`${mem_uri.value}bitSize`),
   sourceCollection: new NamedNode(`${mem_uri.value}sourceCollection`),
   ApproximateMembershipFunction: new NamedNode(`${mem_uri.value}ApproximateMembershipFunction`),
+  projectedProperty: new NamedNode(`${mem_uri.value}projectedProperty`),
   BloomFilter: new NamedNode(`${mem_uri.value}BloomFilter`),
 };

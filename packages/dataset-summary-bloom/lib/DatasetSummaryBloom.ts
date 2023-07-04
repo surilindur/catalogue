@@ -76,41 +76,60 @@ export class DatasetSummaryBloom extends DatasetSummary {
   }
 
   public toRdf(dataset: string): RDF.Quad[] {
+    const output: RDF.Quad[] = [];
     const factory: RDF.DataFactory = new DataFactory();
-    const dataset_uri: RDF.NamedNode = factory.namedNode(this.replaceDatasetKeyValues(dataset));
-    const filter_node: RDF.NamedNode = factory.namedNode(`${dataset_uri.value}#bloomfilter`);
-    const output: RDF.Quad[] = [
-      factory.quad(
-        filter_node,
-        RDF_NS.type,
-        MEM_NS.ApproximateMembershipFunction,
-      ),
-      factory.quad(
-        filter_node,
-        RDF_NS.type,
-        MEM_NS.BloomFilter,
-      ),
-      factory.quad(
-        filter_node,
-        MEM_NS.sourceCollection,
-        dataset_uri,
-      ),
-      factory.quad(
-        filter_node,
-        MEM_NS.binaryRepresentation,
-        factory.literal((<any> this.combinedFilter).bitfield.buffer.toString('base64')),
-      ),
-      factory.quad(
-        filter_node,
-        MEM_NS.bitSize,
-        factory.literal(this.size.toString(10), XSD_NS.integer),
-      ),
-      factory.quad(
-        filter_node,
-        MEM_NS.hashSize,
-        factory.literal(this.slices.toString(10), XSD_NS.integer),
-      ),
-    ];
+    const datasetUri: RDF.NamedNode = factory.namedNode(this.replaceDatasetKeyValues(dataset));
+    const filtersByProperty: Record<string, Bloem> = {
+      // eslint-disable-next-line id-length
+      s: this.subjectFilter,
+      // eslint-disable-next-line id-length
+      p: this.predicateFilter,
+      // eslint-disable-next-line id-length
+      o: this.objectFilter,
+      // eslint-disable-next-line id-length
+      g: this.graphFilter,
+      spog: this.combinedFilter,
+    };
+    for (const [ projectedProperty, bloomFilter ] of Object.entries(filtersByProperty)) {
+      const filterNode: RDF.NamedNode = factory.namedNode(`${datasetUri.value}#bloomfilter-${projectedProperty}`);
+      output.push(
+        factory.quad(
+          filterNode,
+          RDF_NS.type,
+          MEM_NS.ApproximateMembershipFunction,
+        ),
+        factory.quad(
+          filterNode,
+          RDF_NS.type,
+          MEM_NS.BloomFilter,
+        ),
+        factory.quad(
+          filterNode,
+          MEM_NS.sourceCollection,
+          filterNode,
+        ),
+        factory.quad(
+          filterNode,
+          MEM_NS.projectedProperty,
+          factory.literal(projectedProperty),
+        ),
+        factory.quad(
+          filterNode,
+          MEM_NS.binaryRepresentation,
+          factory.literal((<any> bloomFilter).bitfield.buffer.toString('base64')),
+        ),
+        factory.quad(
+          filterNode,
+          MEM_NS.bitSize,
+          factory.literal(this.size.toString(10), XSD_NS.integer),
+        ),
+        factory.quad(
+          filterNode,
+          MEM_NS.hashSize,
+          factory.literal(this.slices.toString(10), XSD_NS.integer),
+        ),
+      );
+    }
     return output;
   }
 }
