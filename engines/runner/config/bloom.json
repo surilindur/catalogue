@@ -4,7 +4,7 @@
     "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/catalogue-dataset-summary-generator/^0.0.0/components/context.jsonld"
   ],
   "import": [
-    "loader/filesystem.json",
+    "loader/filesystem-per-folder.json",
     "serializer/filesystem.json",
     "summary/bloom.json"
   ],

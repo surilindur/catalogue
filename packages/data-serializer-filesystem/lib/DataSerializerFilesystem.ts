@@ -1,5 +1,5 @@
 import { writeFileSync, existsSync, unlinkSync } from 'node:fs';
-import { resolve, join } from 'node:path';
+import { resolve } from 'node:path';
 import type * as RDF from '@rdfjs/types';
 import { DataSerializer, type IDataSerializerArgs } from '@solidlab/catalogue-data-serializer';
 import { Writer } from 'n3';
@@ -21,7 +21,7 @@ export class DataSerializerFilesystem extends DataSerializer {
   }
 
   public async serialize(target: string, data: RDF.Quad[]): Promise<boolean> {
-    const serializationPath = resolve(join(target, this.path));
+    const serializationPath = resolve(target + this.path);
     if (!this.dryrun && existsSync(serializationPath)) {
       if (!this.overwrite) {
         throw new Error(`Target already exists: ${serializationPath}`);
