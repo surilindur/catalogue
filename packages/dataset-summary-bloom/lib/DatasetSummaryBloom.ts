@@ -106,7 +106,7 @@ export class DatasetSummaryBloom extends DatasetSummary {
         factory.quad(
           filterNode,
           MEM_NS.sourceCollection,
-          filterNode,
+          datasetUri,
         ),
         factory.quad(
           filterNode,
