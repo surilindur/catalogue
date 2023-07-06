@@ -24,6 +24,16 @@
         "contentType": "application/n-quads",
         "pathSuffix": ".nq"
       }
+    },
+    {
+      "@id": "urn:solid-server:default:ResourceLockerOverride",
+      "@type": "Override",
+      "overrideInstance": {
+        "@id": "urn:solid-server:default:ResourceLocker"
+      },
+      "overrideParameters": {
+        "@type": "VoidLocker"
+      }
     }
   ]
 }
