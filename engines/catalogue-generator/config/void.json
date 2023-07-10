@@ -1,0 +1,10 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/catalogue-config/^0.0.0/components/context.jsonld"
+  ],
+  "import": [
+    "scc:config/data-loader/filesystem-per-pod.json",
+    "scc:config/data-serializer/filesystem.json",
+    "scc:config/dataset-summary/void.json"
+  ]
+}

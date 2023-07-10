@@ -1,12 +1,11 @@
 {
   "@context": [
-    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/catalogue-runner/^0.0.0/components/context.jsonld",
     "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/catalogue-dataset-summary-generator/^0.0.0/components/context.jsonld"
   ],
   "import": [
-    "loader/filesystem-per-pod.json",
-    "serializer/filesystem.json",
-    "summary/bloom.json"
+    "data-loader/filesystem-per-pod.json",
+    "data-serializer/filesystem.json",
+    "dataset-summary/void.json"
   ],
   "@graph": [
     {
@@ -20,7 +19,7 @@
         "@id": "urn:catalogue:serializer:filesystem"
       },
       "summary": {
-        "@id": "urn:catalogue:summary:bloom"
+        "@id": "urn:catalogue:summary:void"
       }
     }
   ]

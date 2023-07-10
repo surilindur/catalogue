@@ -1,0 +1,11 @@
+{
+  "name": "@solidlab/catalogue-config",
+  "version": "0.0.0",
+  "description": "Configuration files for summary generator",
+  "repository": "https://github.com/surilindur/catalogue",
+  "author": "surilindur",
+  "types": "lib/index",
+  "license": "MIT",
+  "lsd:module": true,
+  "private": true
+}

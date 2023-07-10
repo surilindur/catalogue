@@ -19,9 +19,12 @@
     "build:ts": "tsc",
     "build:components": "componentsjs-generator packages/* engines/*",
     "prepare": "npm run build",
-    "solidbench:generate": "NODE_OPTIONS=--max-old-space-size=8192 solidbench generate",
-    "solidbench:serve": "solidbench serve -c ./engines/runner/config/server.json",
-    "catalogue": "node engines/runner/bin/catalogue.js"
+    "solidbench-generate": "NODE_OPTIONS=--max-old-space-size=8192 solidbench generate",
+    "serve": "community-solid-server -f ./out-fragments/http/localhost_3000 -c ./engines/catalogue-config/config/server/default.json",
+    "catalogue": "node engines/catalogue-generator/bin/catalogue.js"
+  },
+  "dependencies": {
+    "@solid/community-server": "^5.0.0"
   },
   "devDependencies": {
     "@rdfjs/types": "*",

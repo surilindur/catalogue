@@ -31,19 +31,19 @@ The primary use case of this tool is to generate summaries for the data from [So
 
 To generate SolidBench data:
 
-    $ yarn solidbench:generate
+    $ yarn solidbench-generate
 
 The VoID descriptions can be generated with:
 
-    $ yarn catalogue --config ./engines/runner/config/void.json
+    $ yarn catalogue --config ./engines/catalogue-config/config/generator/void.json
 
 The Bloom filters can be generated with:
 
-    $ yarn catalogue --config ./engines/runner/config/bloom.json
+    $ yarn catalogue --config ./engines/catalogue-config/config/generator/bloom.json
 
-The generated dataset can be served with the custom `FixedContentTypeMapper` with:
+The generated dataset can be served with the custom `FixedContentTypeMapper` and `MetricsHandler` with:
 
-    $ yarn solidbench:serve
+    $ yarn serve
 
 The summaries can then be found amongst the metadata at pod roots, for example:
 
@@ -83,15 +83,44 @@ _:df_1654_13 <http://rdfs.org/ns/void#triples> "1"^^<http://www.w3.org/2001/XMLS
 ...
 ```
 
-Example Bloom filter for a pod, using one combined filter for subject, predicate, object and graph values:
+Example Bloom filter for a pod, with different filters for subject, predicate, object, and all of subject, predicate, object and graph combined:
 
 ```
-<http://localhost:3000/pods/00000000000000000065/#bloomfilter> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://semweb.mmlab.be/ns/membership#ApproximateMembershipFunction> .
-<http://localhost:3000/pods/00000000000000000065/#bloomfilter> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://semweb.mmlab.be/ns/membership#BloomFilter> .
-<http://localhost:3000/pods/00000000000000000065/#bloomfilter> <http://semweb.mmlab.be/ns/membership#sourceCollection> <http://localhost:3000/pods/00000000000000000065/> .
-<http://localhost:3000/pods/00000000000000000065/#bloomfilter> <http://semweb.mmlab.be/ns/membership#binaryRepresentation> "AFQACBGQAAMQAREEEFAAEIAQAwRUBFAEigAHCAgAIAAgQCAURCCEgABEBAsJiQQCBSQVJQYUiQGAaAAECAAYQBZAEKRNAAQHAQBBgBAgAAEEUSABUAEAACBUVEAHRBDIBABAIAgEMEEJBAVUhBUQFABgFAHAIFAAhRQIAAmrgkQACAhAFDEBAAAhACGAFJNDQEAjAUQCQIWFMQhyQCACiBAMABQACBAAQBcAwABECRQEFABBAJAUQBBUEAQQAAAGwBABAEMBERAAAggkQBIAABBAgAVBAQBBIAEAcEAAFQZAwCCgAAWCABQBgAEFIAAAECBBUhgEEEkJkABQQSAEggBgikkCKAAQBRACRkDQBAAhAAAYBwFEABAQBEFIEAUEAFAIAAlARAAQ0EgEBJAMBAAQBDICPBAAQAABUwIIAAAFREAEBAAgWABBgUAARQAAIBEEBAAJQAAUIkCAQgUsgEQQEIEhERBwggAABEEZEEAFACEBAAAgAABQGAUMFQBBBIBAAQGRAFBAEwARABBUUkUBMAREAASEFkASxBAFAAAABUAAQAJUQAABAQAjCFAgAQERACBYAMAFQREQB4GAFaBQAApwCQxEcFAE5JF0kggESAYUQUIAQoEAAhkIBRBUQBYNQQAABVFAAIAUAMAFyATCAMRwEQAdUBgBSGAJgAU=" .
-<http://localhost:3000/pods/00000000000000000065/#bloomfilter> <http://semweb.mmlab.be/ns/membership#bitSize> "4096"^^<http://www.w3.org/2001/XMLSchema#integer> .
-<http://localhost:3000/pods/00000000000000000065/#bloomfilter> <http://semweb.mmlab.be/ns/membership#hashSize> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-s> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://semweb.mmlab.be/ns/membership#ApproximateMembershipFunction> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-s> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://semweb.mmlab.be/ns/membership#BloomFilter> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-s> <http://semweb.mmlab.be/ns/membership#sourceCollection> <http://localhost:3000/pods/00000000000000000065/> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-s> <http://semweb.mmlab.be/ns/membership#projectedProperty> "s" .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-s> <http://semweb.mmlab.be/ns/membership#binaryRepresentation> "AEQAABGQAAMQABEAAFAAAIAAAwRQAEAECgADAAAAAAAAQCAQBCCEgABEAAMJgQQCASQVJQYAiQGACAAACAAQQBZAEAQNAAACAQBAABAAAAEEECABEAEAACBUFEAHRBBIBABAIAgAMAAJBAREBBUABABAFAGAIEAABRQIAAECgAAACAAABBEAAAAAACCAAJNAQEAjAUACQAWFEAhyQCACiAAEABQACAAAQBcAwAAEABAEFABAABAUQBBEEAQAAAAGwBABAEIBERAAAggEQBIAABBAAAUBAABBAAAAMEAABQZAgCCgAAGCABABgAAAIAAAACBBUggAEEgJkABQQSAEggBgiEkCKAAABQACAgDABAAgAAAIBgEEABAABEEAAAUEAAAAAAlARAAAUEAEBJAAAAAQBBICDBAAQAAAQQAAAAAFAEAABAAgCABBgUAARAAAIAEEBAABQAAUAgCAQgEsgEQQEIEhERBgggAAAEAZEAAAACABAAAgAABAEAUIFABBAABAAQEQAABAEgARABAUQkUBMAQEAASEBAASRBABAAAABEAAQAIQQAABAQACCFAgAQARAABIAIAAQAAQBIEAEaBQAAowCQxEMFAEhJBwkggAQAYUQEIAQoAAAhkIARBUQAIMQAAAAUBAAIAQAIAEQAQAAIRwEQAcUAABSGAAgAQ=" .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-s> <http://semweb.mmlab.be/ns/membership#bitSize> "4096"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-s> <http://semweb.mmlab.be/ns/membership#hashSize> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://semweb.mmlab.be/ns/membership#ApproximateMembershipFunction> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-p> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://semweb.mmlab.be/ns/membership#BloomFilter> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-p> <http://semweb.mmlab.be/ns/membership#sourceCollection> <http://localhost:3000/pods/00000000000000000065/> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-p> <http://semweb.mmlab.be/ns/membership#projectedProperty> "p" .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-p> <http://semweb.mmlab.be/ns/membership#binaryRepresentation> "AAAACAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAECAAAAAAAAAAAQAAAAAAABAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAgAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAEEAAAEEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAABAAAAAAAAAAAAAEAIAAAAAAAAAAIAAAAAAAAAAAAQABAAAAAAAABAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAIAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAEAAAAAAEAAAAAAAAAAAAAABAAAAAAAAAAAAABAAQAAABAAAQAQAAAAAAAAAAAAQAAAAAAAAAAAAAAAgAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAEAAAAAAAAAAAAEAAAABAAAAACBAAAAAQAAAAAAEAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAEAAAAAQCAFAAAAAAAAAAAQAAAIAAAAAAACAAAAAAAAAAAAAAAAAAAAAQAAAAAABAAAAAEAAAAgAQCAEAAAAAAAAAAAAAAAAA=" .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-p> <http://semweb.mmlab.be/ns/membership#bitSize> "4096"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-p> <http://semweb.mmlab.be/ns/membership#hashSize> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-o> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://semweb.mmlab.be/ns/membership#ApproximateMembershipFunction> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-o> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://semweb.mmlab.be/ns/membership#BloomFilter> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-o> <http://semweb.mmlab.be/ns/membership#sourceCollection> <http://localhost:3000/pods/00000000000000000065/> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-o> <http://semweb.mmlab.be/ns/membership#projectedProperty> "o" .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-o> <http://semweb.mmlab.be/ns/membership#binaryRepresentation> "ABAAABEAAAAAAAAEEAAAEAAQAAAEBBAAgAAAAAAAIAAgQAAEAAAAAAAABAgACAQAAAAAAAAUAQAAYAAEAAAIAAAAAKBAAAQBAAABAAAgAAEAQAAAQAAAAAAAEAAAAACAAAAAAAAEAAAABAAQABAQEAAgAABAABAAhAAAAAipAkQAAABAFCAAAAAhAAEAEAADAAABAAQAAIUAAQAAAAAAABAAAAAAABAAAAAAAAAACQQAAAABAAAAAAAQAAQQAAAAgAAAAAEAAAAAAAAgAAAAABAAgABAAQAAAAEAUAAAEAAAAAAAAAQCAAQAAAEFAAAAAAAAQhgEAAEBAAAAAAAAgAAACkAAAAAQABAAQEAAAAAAAAAAAABAAAAQAEAIEAAAAFAIAAAABAAQgAAABAAMBAAAACAAEAAAAAABEwIIAAAAQAAEAAAAUAAAAAAABQAAABAAAAAAAAAAIAAAAAQAAAAAAAAAAAAQAgAABAEAAEAEAAAAAAAAAAAQCAAAAQAAAIBAAAAAAFAAAAAAAABAAAAAAAAEAAAAFkAAAAAEAAAAAQAAAABEAAAAAAAhAAAAAAEAAAAQAEABAREAAgAAAAAAAABAAAAAAAAAQIAUAAAEAAAAAQAAAAEAAAAABAAAABABQQAABAEAAAAAAEABCADAAAAAAAARABgAAAAJAAQ=" .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-o> <http://semweb.mmlab.be/ns/membership#bitSize> "4096"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-o> <http://semweb.mmlab.be/ns/membership#hashSize> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-g> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://semweb.mmlab.be/ns/membership#ApproximateMembershipFunction> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-g> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://semweb.mmlab.be/ns/membership#BloomFilter> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-g> <http://semweb.mmlab.be/ns/membership#sourceCollection> <http://localhost:3000/pods/00000000000000000065/> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-g> <http://semweb.mmlab.be/ns/membership#projectedProperty> "g" .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-g> <http://semweb.mmlab.be/ns/membership#binaryRepresentation> "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-g> <http://semweb.mmlab.be/ns/membership#bitSize> "4096"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-g> <http://semweb.mmlab.be/ns/membership#hashSize> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-spog> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://semweb.mmlab.be/ns/membership#ApproximateMembershipFunction> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-spog> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://semweb.mmlab.be/ns/membership#BloomFilter> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-spog> <http://semweb.mmlab.be/ns/membership#sourceCollection> <http://localhost:3000/pods/00000000000000000065/> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-spog> <http://semweb.mmlab.be/ns/membership#projectedProperty> "spog" .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-spog> <http://semweb.mmlab.be/ns/membership#binaryRepresentation> "AFQACBGQAAMQAREEEFAAEIAQAwRUBFAEigAHCAAAIAAgQCAURCCEgABEBAsJiQQCBSQVJQYUiQGAaAAECAAYQBZAEKRNAAQHAQBBgBAgAAEEUCABUAEAACBUVEAHRBDIBABAIAgEMEEJBAVUBBUQFABgFAHAIFAAhRQIAAmrgkQACAhAFDEAAAAhACGAFJNDQEAjAUQCQIWFMQhyQCACiBAMABQACBAAQBcAwABECRQEFABBABAUQBBUEAQQAAAGwBABAEMBERAAAggkQBIAABBAgAVBAQBBIAEAcEAAFQZAwCCgAAWCABQBgAEFIAAAECBBUhgEEEkJkABQQSAEggBgikkCKAAQBRACRkDQBAAhAAAYBwFEABAQBEEIEAUEAFAIAAlARAAQ0EgEBJAMBAAQBDICPBAAQAABUwIIAAAFQEAEBAAgWABBgUAARQAAIBEEBAAJQAAUIkCAQgUsgEQQEIEhERBwggAABEEZEEAFACEBAAAgAABQGAUMFQBBBIBAAQGRAFBAEwARABBUUkUBMAQEAASEFkASxBAFAAAABUAAQAJUQAABAQAjCFAgAQERACBYAMAFQREQB4GAFaBQAApwCQxEcFAE5JB0kggESAYUQUIAQoEAAhkIBRBUQBYNQQAABVFAAIAUAMAFyATCAMRwEQAdUBgBSGAJgAQ=" .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-spog> <http://semweb.mmlab.be/ns/membership#bitSize> "4096"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://localhost:3000/pods/00000000000000000065/#bloomfilter-spog> <http://semweb.mmlab.be/ns/membership#hashSize> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
 ```
 
 ## Issues

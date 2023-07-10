@@ -3,9 +3,6 @@
     "https://linkedsoftwaredependencies.org/bundles/npm/@solid/community-server/^5.0.0/components/context.jsonld",
     "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/fixed-content-type-mapper-meta/^0.0.0/components/context.jsonld"
   ],
-  "import": [
-    "../../../node_modules/solidbench/templates/server-config.json"
-  ],
   "@graph": [
     {
       "@id": "urn:solid-server:default:FileIdentifierMapperOverride",
@@ -23,16 +20,6 @@
         },
         "contentType": "application/n-quads",
         "pathSuffix": ".nq"
-      }
-    },
-    {
-      "@id": "urn:solid-server:default:ResourceLockerOverride",
-      "@type": "Override",
-      "overrideInstance": {
-        "@id": "urn:solid-server:default:ResourceLocker"
-      },
-      "overrideParameters": {
-        "@type": "VoidLocker"
       }
     }
   ]
