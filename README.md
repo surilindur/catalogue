@@ -54,6 +54,18 @@ The summaries can then be found amongst the metadata at pod roots, for example:
 
     $ curl http://localhost:3000/pods/00000000000000000065/
 
+## Docker
+
+There is a Dockerfile provided that packs up the application and the generated data from `out-fragments/` into an image than can be used to serve it. This is experimental and is only intended for local use when needing the generated data elsewhere in a neat package. The Docker image can be built with:
+
+    $ docker build --network host --tag solidlab/catalogue:dev .
+
+And then ran elsewhere on the local system:
+
+    $ docker run --init --network host solidlab/catalogue:dev
+
+The image at `solidlab/catalogue` should not exist on Docker Hub, which is why it might be useful to use. Other tags should work, as well.
+
 ## Examples
 
 Example VoID description for a pod, truncated due to length:
