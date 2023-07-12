@@ -9,13 +9,9 @@ componentsjs-error-state.json
 
 # TypeScript compile output
 
-/engines/**/*.js
-/engines/**/*.js.map
-/engines/**/*.d.ts
-
-/packages/**/*.js
-/packages/**/*.js.map
-/packages/**/*.d.ts
+*.js
+*.js.map
+*.d.ts
 
 # SolidBench data
 out-enhanced/
