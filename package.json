@@ -14,11 +14,10 @@
   ],
   "scripts": {
     "test": "jest ${1}",
-    "lint": "eslint . --ext .ts",
-    "build": "npm run build:ts && npm run build:components",
+    "lint": "eslint . --ext ts --ignore-pattern '*.d.ts' --max-warnings 0",
+    "build": "yarn run build:ts && yarn run build:components",
     "build:ts": "tsc",
     "build:components": "componentsjs-generator packages/* engines/*",
-    "prepare": "npm run build",
     "solidbench-generate": "NODE_OPTIONS=--max-old-space-size=8192 solidbench generate",
     "serve": "community-solid-server -f ./out-fragments/http/localhost_3000 -c ./engines/catalogue-config/config/server/default.json",
     "catalogue": "node engines/catalogue-generator/bin/catalogue.js"
@@ -33,7 +32,7 @@
     "@typescript-eslint/parser": "^5.0.0",
     "componentsjs-generator": "^3.0.0",
     "eslint": "^8.0.0",
-    "typescript": "^5.0.0",
-    "solidbench": "^1.0.0"
+    "solidbench": "^1.0.0",
+    "typescript": "^5.0.0"
   }
 }

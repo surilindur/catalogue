@@ -9,16 +9,16 @@
   "lsd:module": true,
   "types": "lib/index",
   "dependencies": {
-    "@solidlab/catalogue-dataset-summary": "^0.0.0",
-    "@solidlab/catalogue-dataset-summary-void": "^0.0.0",
-    "@solidlab/catalogue-dataset-summary-bloom": "^0.0.0",
-    "@solidlab/catalogue-dataset-summary-generator": "^0.0.0",
+    "@solidlab/catalogue-config": "^0.0.0",
     "@solidlab/catalogue-data-loader": "^0.0.0",
     "@solidlab/catalogue-data-loader-filesystem": "^0.0.0",
     "@solidlab/catalogue-data-serializer": "^0.0.0",
     "@solidlab/catalogue-data-serializer-filesystem": "^0.0.0",
+    "@solidlab/catalogue-dataset-summary": "^0.0.0",
+    "@solidlab/catalogue-dataset-summary-bloom": "^0.0.0",
+    "@solidlab/catalogue-dataset-summary-generator": "^0.0.0",
+    "@solidlab/catalogue-dataset-summary-void": "^0.0.0",
     "@solidlab/fixed-content-type-mapper-meta": "^0.0.0",
-    "@solidlab/catalogue-config": "^0.0.0",
     "componentsjs": "^5.0.0"
   }
 }

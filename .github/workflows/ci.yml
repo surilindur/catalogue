@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+env:
+  NODE_VERSION: 20.x
+
 jobs:
   build:
     name: Lint and build
@@ -17,7 +20,14 @@ jobs:
       uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: 20
+        node-version: ${{ env.NODE_VERSION }}
         cache: yarn
-    - name: Prepare application
-      run: yarn install --frozen-lockfile --ignore-engines
+        cache-dependency-path: yarn.lock
+    - name: Set yarn version
+      run: yarn set version stable
+    - name: Install dependencies
+      run: yarn install --immutable
+    - name: Run ESLint
+      run: yarn lint
+    - name: Build packages
+      run: yarn build

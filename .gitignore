@@ -4,6 +4,7 @@ components/
 
 # Error logs
 
+.yarn/
 yarn-error.log
 componentsjs-error-state.json
 
