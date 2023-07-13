@@ -14,7 +14,7 @@ COPY --from=build /opt/catalogue/package.json ./package.json
 COPY --from=build /opt/catalogue/engines ./engines
 COPY --from=build /opt/catalogue/packages ./packages
 COPY --from=build /opt/catalogue/node_modules ./node_modules
-COPY --from=build /opt/catalogue/out-fragments /opt/catalogue-data
+COPY --from=build /opt/catalogue/out-fragments/http/localhost_3000 /opt/catalogue-data
 
 EXPOSE 3000
 

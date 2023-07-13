@@ -60,7 +60,7 @@ There is a Dockerfile provided that packs up the application and the generated d
 
     $ docker build --network host --tag solidlab/catalogue:dev .
 
-And then ran elsewhere on the local system:
+And then ran elsewhere on the local system, `--init` seems necessary to make the image accept ctrl+c:
 
     $ docker run --init --network host solidlab/catalogue:dev
 
