@@ -1,12 +1,13 @@
-FROM node:current-alpine as build
+FROM node:20-alpine as build
 
 WORKDIR /opt/catalogue
 
 COPY . .
 
-RUN yarn install --ignore-engines --frozen-lockfile
+RUN corepack enable && corepack prepare yarn@stable --activate
+RUN yarn install --immutable
 
-FROM node:current-alpine
+FROM gcr.io/distroless/nodejs20-debian11
 
 WORKDIR /opt/catalogue
 
@@ -18,7 +19,7 @@ COPY --from=build /opt/catalogue/out-fragments/http/localhost_3000 /opt/catalogu
 
 EXPOSE 3000
 
-ENTRYPOINT [ "node", "./node_modules/@solid/community-server/bin/server.js" ]
+CMD [ "./node_modules/@solid/community-server/bin/server.js" ]
 
 ENV NODE_ENV production
 ENV CSS_CONFIG /opt/catalogue/engines/catalogue-config/config/server/default.json
