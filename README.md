@@ -24,11 +24,12 @@ The following additional [Community Solid Server](https://github.com/CommunitySo
 
 ## Installing
 
-The tool is not published anywhere, because it is not intended for actual use and is only intended for experiments. After cloning the repository, it should be sufficient to install the dependencies:
+The tool is not published anywhere, because it is not intended for actual use and is only intended for experiments. After cloning the repository, it should be sufficient to install the dependencies and build:
 
-    $ yarn install --frozen-lockfile --ignore-engines
+    $ yarn install --immutable
+    $ yarn build
 
-The packages should be built automatically. The configurations are in [engines/catalogue-config/config](engines/catalogue-config/config).
+The configurations are in [engines/catalogue-config/config](engines/catalogue-config/config).
 
 ## Usage
 
