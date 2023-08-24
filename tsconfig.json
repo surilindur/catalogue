@@ -18,10 +18,8 @@
     "esModuleInterop": true
   },
   "include": [
-    "engines/**/*.ts",
-    "engines/**/*.ts",
-    "packages/**/*.ts",
-    "packages/**/*.ts"
+    "lib/**/*.ts",
+    "bin/**/*.ts"
   ],
   "exclude": [
     "**/node_modules",

@@ -1,8 +1,8 @@
 import { writeFileSync, existsSync, unlinkSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type * as RDF from '@rdfjs/types';
-import { DataSerializer, type IDataSerializerArgs } from '@solidlab/catalogue-data-serializer';
 import { Writer } from 'n3';
+import { DataSerializer, type IDataSerializerArgs } from './DataSerializer';
 
 export class DataSerializerFilesystem extends DataSerializer {
   private readonly format: string;

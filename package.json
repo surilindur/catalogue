@@ -1,38 +1,35 @@
 {
-  "name": "@solidlab/catalogue",
+  "name": "@solidlab/solidbench-summaries",
   "version": "0.0.0",
   "description": "Experimental summary generation scripts for SolidBench",
-  "main": "index.js",
-  "repository": "https://github.com/surilindur/catalogue",
+  "main": "lib/index.js",
+  "types": "lib/index",
+  "repository": "https://github.com/surilindur/solidbench-summaries",
   "author": "surilindur",
   "lsd:module": true,
   "license": "MIT",
   "private": true,
-  "workspaces": [
-    "engines/*",
-    "packages/*"
-  ],
+  "bin": "node bin/solidbench-summaries.js",
   "scripts": {
     "test": "jest ${1}",
     "lint": "eslint . --ext ts --ignore-pattern '*.d.ts' --max-warnings 0",
     "build": "yarn run build:ts && yarn run build:components",
     "build:ts": "tsc",
-    "build:components": "componentsjs-generator packages/* engines/*",
-    "solidbench-generate": "NODE_OPTIONS=--max-old-space-size=8192 solidbench generate",
-    "serve": "community-solid-server -f ./out-fragments/http/localhost_3000 -c ./engines/catalogue-config/config/server/default.json",
-    "catalogue": "node engines/catalogue-generator/bin/catalogue.js"
+    "build:components": "componentsjs-generator ."
   },
   "dependencies": {
-    "@solid/community-server": "^5.0.0"
+    "@solid/community-server": "^6.0.0",
+    "bloem": "^0.2.0",
+    "componentsjs": "^5.0.0",
+    "rdf-data-factory": "^1.0.0"
   },
   "devDependencies": {
     "@rdfjs/types": "*",
     "@rubensworks/eslint-config": "^2.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
+    "@types/bloem": "^0.2.0",
+    "@types/n3": "^1.0.0",
     "componentsjs-generator": "^3.0.0",
     "eslint": "^8.0.0",
-    "solidbench": "^1.0.0",
     "typescript": "^5.0.0"
   }
 }

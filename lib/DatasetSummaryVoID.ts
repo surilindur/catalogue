@@ -1,14 +1,26 @@
 import type * as RDF from '@rdfjs/types';
-import { DatasetSummary, type IDatasetSummaryArgs } from '@solidlab/catalogue-dataset-summary';
-import { XSD_NS, RDF_NS, VoID_NS } from '@solidlab/catalogue-rdf-namespaces';
 import { DataFactory } from 'rdf-data-factory';
+import { DatasetSummary, type IDatasetSummaryArgs } from './DatasetSummary';
+import {
+  IRI_A,
+  IRI_VOID_CLASSES,
+  IRI_VOID_DATASET,
+  IRI_VOID_DISTINCT_OBJECTS,
+  IRI_VOID_DISTINCT_SUBJECTS,
+  IRI_VOID_PROPERTIES,
+  IRI_VOID_PROPERTY,
+  IRI_VOID_PROPERTY_PARTITION,
+  IRI_VOID_TRIPLES,
+  IRI_VOID_URI_SPACE,
+  IRI_XSD_INTEGER,
+} from './Namespaces';
 
 /**
  * Class for generating a Vocabulary of Interlinked Datasets description
  * for a dataset by instantiating it with the dataset URI and registering triples.
  * See: https://www.w3.org/TR/void/
  */
-export class DatasetSummaryVoid extends DatasetSummary {
+export class DatasetSummaryVoID extends DatasetSummary {
   private subjectCardinalities: Record<string, number>;
   private predicateCardinalities: Record<string, number>;
   private objectCardinalities: Record<string, number>;
@@ -49,7 +61,7 @@ export class DatasetSummaryVoid extends DatasetSummary {
     }
     if (quad.predicate.termType === 'NamedNode') {
       this.predicateCardinalities[quad.predicate.value] = (this.predicateCardinalities[quad.predicate.value] ?? 0) + 1;
-      if (quad.predicate.value === RDF_NS.type.value && quad.object.termType === 'NamedNode') {
+      if (quad.predicate.value === IRI_A.value && quad.object.termType === 'NamedNode') {
         this.classCardinalities[quad.object.value] = (this.classCardinalities[quad.object.value] ?? 0) + 1;
       }
     }
@@ -67,38 +79,38 @@ export class DatasetSummaryVoid extends DatasetSummary {
     const output: RDF.Quad[] = [
       factory.quad(
         dataset_uri,
-        RDF_NS.type,
-        VoID_NS.Dataset,
+        IRI_A,
+        IRI_VOID_DATASET,
       ),
       factory.quad(
         dataset_uri,
-        VoID_NS.uriSpace,
+        IRI_VOID_URI_SPACE,
         factory.literal(dataset_uri.value),
       ),
       factory.quad(
         dataset_uri,
-        VoID_NS.triples,
-        factory.literal(this.triples.toString(10), XSD_NS.integer),
+        IRI_VOID_TRIPLES,
+        factory.literal(this.triples.toString(10), IRI_XSD_INTEGER),
       ),
       factory.quad(
         dataset_uri,
-        VoID_NS.properties,
-        factory.literal(Object.keys(this.predicateCardinalities).length.toString(10), XSD_NS.integer),
+        IRI_VOID_PROPERTIES,
+        factory.literal(Object.keys(this.predicateCardinalities).length.toString(10), IRI_XSD_INTEGER),
       ),
       factory.quad(
         dataset_uri,
-        VoID_NS.classes,
-        factory.literal(Object.keys(this.classCardinalities).length.toString(10), XSD_NS.integer),
+        IRI_VOID_CLASSES,
+        factory.literal(Object.keys(this.classCardinalities).length.toString(10), IRI_XSD_INTEGER),
       ),
       factory.quad(
         dataset_uri,
-        VoID_NS.distinctObjects,
-        factory.literal(Object.keys(this.objectCardinalities).length.toString(10), XSD_NS.integer),
+        IRI_VOID_DISTINCT_OBJECTS,
+        factory.literal(Object.keys(this.objectCardinalities).length.toString(10), IRI_XSD_INTEGER),
       ),
       factory.quad(
         dataset_uri,
-        VoID_NS.distinctSubjects,
-        factory.literal(Object.keys(this.subjectCardinalities).length.toString(10), XSD_NS.integer),
+        IRI_VOID_DISTINCT_SUBJECTS,
+        factory.literal(Object.keys(this.subjectCardinalities).length.toString(10), IRI_XSD_INTEGER),
       ),
       // This is not possible to implement this way :(
       // factory.quad(
@@ -112,18 +124,18 @@ export class DatasetSummaryVoid extends DatasetSummary {
       output.push(
         factory.quad(
           dataset_uri,
-          VoID_NS.propertyPartition,
+          IRI_VOID_PROPERTY_PARTITION,
           predicateCardinality,
         ),
         factory.quad(
           predicateCardinality,
-          VoID_NS.property,
+          IRI_VOID_PROPERTY,
           factory.namedNode(predicate),
         ),
         factory.quad(
           predicateCardinality,
-          VoID_NS.triples,
-          factory.literal(cardinality.toString(10), XSD_NS.integer),
+          IRI_VOID_TRIPLES,
+          factory.literal(cardinality.toString(10), IRI_XSD_INTEGER),
         ),
       );
     }

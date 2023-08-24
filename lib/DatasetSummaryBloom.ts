@@ -1,8 +1,17 @@
 import type * as RDF from '@rdfjs/types';
-import { DatasetSummary, type IDatasetSummaryArgs } from '@solidlab/catalogue-dataset-summary';
-import { RDF_NS, MEM_NS, XSD_NS } from '@solidlab/catalogue-rdf-namespaces';
 import { Bloem } from 'bloem';
 import { DataFactory } from 'rdf-data-factory';
+import { DatasetSummary, type IDatasetSummaryArgs } from './DatasetSummary';
+import {
+  IRI_A, IRI_MEM_APPROXIMATE_MEMBERSHIP_FUNCTION,
+  IRI_MEM_BINARY_REPRESENTATION,
+  IRI_MEM_BIT_SIZE,
+  IRI_MEM_BLOOM_FILTER,
+  IRI_MEM_HASH_SIZE,
+  IRI_MEM_PROJECTED_PROPERTY,
+  IRI_MEM_SOURCE_COLLECTION,
+  IRI_XSD_INTEGER,
+} from './Namespaces';
 
 /**
  * Class for generating a Bloom filter for a dataset.
@@ -59,7 +68,7 @@ export class DatasetSummaryBloom extends DatasetSummary {
       const value: Buffer = namedNodeToBuffer(quad.predicate);
       this.predicateFilter.add(value);
       this.combinedFilter.add(value);
-      if (quad.predicate === RDF_NS.type && quad.object.termType === 'NamedNode') {
+      if (quad.predicate.value === IRI_A.value && quad.object.termType === 'NamedNode') {
         this.classFilter.add(namedNodeToBuffer(quad.object));
       }
     }
@@ -95,38 +104,38 @@ export class DatasetSummaryBloom extends DatasetSummary {
       output.push(
         factory.quad(
           filterNode,
-          RDF_NS.type,
-          MEM_NS.ApproximateMembershipFunction,
+          IRI_A,
+          IRI_MEM_APPROXIMATE_MEMBERSHIP_FUNCTION,
         ),
         factory.quad(
           filterNode,
-          RDF_NS.type,
-          MEM_NS.BloomFilter,
+          IRI_A,
+          IRI_MEM_BLOOM_FILTER,
         ),
         factory.quad(
           filterNode,
-          MEM_NS.sourceCollection,
+          IRI_MEM_SOURCE_COLLECTION,
           datasetUri,
         ),
         factory.quad(
           filterNode,
-          MEM_NS.projectedProperty,
+          IRI_MEM_PROJECTED_PROPERTY,
           factory.literal(projectedProperty),
         ),
         factory.quad(
           filterNode,
-          MEM_NS.binaryRepresentation,
-          factory.literal((<any> bloomFilter).bitfield.buffer.toString('base64')),
+          IRI_MEM_BINARY_REPRESENTATION,
+          factory.literal((<any>bloomFilter).bitfield.buffer.toString('base64')),
         ),
         factory.quad(
           filterNode,
-          MEM_NS.bitSize,
-          factory.literal(this.size.toString(10), XSD_NS.integer),
+          IRI_MEM_BIT_SIZE,
+          factory.literal(this.size.toString(10), IRI_XSD_INTEGER),
         ),
         factory.quad(
           filterNode,
-          MEM_NS.hashSize,
-          factory.literal(this.slices.toString(10), XSD_NS.integer),
+          IRI_MEM_HASH_SIZE,
+          factory.literal(this.slices.toString(10), IRI_XSD_INTEGER),
         ),
       );
     }

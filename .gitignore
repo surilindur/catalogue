@@ -13,12 +13,3 @@ componentsjs-error-state.json
 *.js
 *.js.map
 *.d.ts
-
-# SolidBench data
-out-enhanced/
-out-fragments/
-out-queries/
-out-snb/
-out-validate/
-out-validate-params/
-params.ini
