@@ -2,7 +2,7 @@ import type * as RDF from '@rdfjs/types';
 import type { DatasetSummary } from './DatasetSummary';
 
 export abstract class SummaryCollector<T extends DatasetSummary> implements ISummaryCollector {
-  protected readonly datasetUriRegex: RegExp;
+  private readonly datasetUriRegex: RegExp;
   protected readonly datasetSummariesByDataset: Map<string, T>;
 
   public constructor(args: ISummaryCollectorArgs) {
