@@ -2,8 +2,8 @@
   "name": "@solidlab/solidbench-summaries",
   "version": "0.0.0",
   "description": "Experimental summary generation scripts for SolidBench",
-  "main": "lib/index.js",
-  "types": "lib/index",
+  "main": "src/index.js",
+  "types": "src/index",
   "repository": "https://github.com/surilindur/solidbench-summaries",
   "author": "surilindur",
   "lsd:module": true,
@@ -18,7 +18,6 @@
     "build:components": "componentsjs-generator ."
   },
   "dependencies": {
-    "@solid/community-server": "^6.0.0",
     "bloem": "^0.2.0",
     "componentsjs": "^5.0.0",
     "rdf-data-factory": "^1.0.0"

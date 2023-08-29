@@ -1,0 +1,42 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/solidbench-summaries/^0.0.0/components/context.jsonld"
+  ],
+  "import": [
+    "imports/data-loaders.json",
+    "imports/data-serializers.json",
+    "imports/summary-collectors.json"
+  ],
+  "@graph": [
+    {
+      "comment": "Bloom filter summary generator",
+      "@id": "urn:solidbench-summaries:generator:bloom",
+      "@type": "SummaryGenerator",
+      "loader": {
+        "@id": "urn:solidbench-summaries:loader:filesystem"
+      },
+      "serializer": {
+        "@id": "urn:solidbench-summaries:serializer:filesystem"
+      },
+      "collector": {
+        "@id": "urn:solidbench-summaries:collector:bloom"
+      },
+      "uri": "file://./out-fragments/http/"
+    },
+    {
+      "comment": "VoID description summary generator",
+      "@id": "urn:solidbench-summaries:generator:void",
+      "@type": "SummaryGenerator",
+      "loader": {
+        "@id": "urn:solidbench-summaries:loader:filesystem"
+      },
+      "serializer": {
+        "@id": "urn:solidbench-summaries:serializer:filesystem"
+      },
+      "collector": {
+        "@id": "urn:solidbench-summaries:collector:void"
+      },
+      "uri": "file://./out-fragments/http/"
+    }
+  ]
+}

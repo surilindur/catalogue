@@ -1,8 +1,10 @@
 import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';
-import { DatasetSummary, type IDatasetSummaryArgs } from './DatasetSummary';
+import type { IDatasetSummaryArgs } from './DatasetSummary';
+import { DatasetSummary } from './DatasetSummary';
 import {
   IRI_A,
+  IRI_XSD_INTEGER,
   IRI_VOID_CLASSES,
   IRI_VOID_DATASET,
   IRI_VOID_DISTINCT_OBJECTS,
@@ -12,20 +14,14 @@ import {
   IRI_VOID_PROPERTY_PARTITION,
   IRI_VOID_TRIPLES,
   IRI_VOID_URI_SPACE,
-  IRI_XSD_INTEGER,
 } from './Namespaces';
 
-/**
- * Class for generating a Vocabulary of Interlinked Datasets description
- * for a dataset by instantiating it with the dataset URI and registering triples.
- * See: https://www.w3.org/TR/void/
- */
 export class DatasetSummaryVoID extends DatasetSummary {
-  private subjectCardinalities: Record<string, number>;
-  private predicateCardinalities: Record<string, number>;
-  private objectCardinalities: Record<string, number>;
-  private graphCardinalities: Record<string, number>;
-  private classCardinalities: Record<string, number>;
+  private readonly subjectCardinalities: Record<string, number>;
+  private readonly predicateCardinalities: Record<string, number>;
+  private readonly objectCardinalities: Record<string, number>;
+  private readonly graphCardinalities: Record<string, number>;
+  private readonly classCardinalities: Record<string, number>;
 
   private triples: number;
 
@@ -39,22 +35,7 @@ export class DatasetSummaryVoID extends DatasetSummary {
     this.classCardinalities = {};
   }
 
-  public add(...quads: RDF.Quad[]): void {
-    for (const quad of quads) {
-      this.register(quad);
-    }
-  }
-
-  public reset(): void {
-    this.triples = 0;
-    this.subjectCardinalities = {};
-    this.predicateCardinalities = {};
-    this.objectCardinalities = {};
-    this.graphCardinalities = {};
-    this.classCardinalities = {};
-  }
-
-  private register(quad: RDF.Quad): void {
+  public register(quad: RDF.Quad): void {
     this.triples++;
     if (quad.subject.termType === 'NamedNode') {
       this.subjectCardinalities[quad.subject.value] = (this.subjectCardinalities[quad.subject.value] ?? 0) + 1;
@@ -73,9 +54,9 @@ export class DatasetSummaryVoID extends DatasetSummary {
     }
   }
 
-  public toRdf(dataset: string): RDF.Quad[] {
+  public quads(): RDF.Quad[] {
     const factory: RDF.DataFactory = new DataFactory();
-    const dataset_uri: RDF.NamedNode = factory.namedNode(this.replaceDatasetKeyValues(dataset));
+    const dataset_uri: RDF.NamedNode = factory.namedNode(this.dataset);
     const output: RDF.Quad[] = [
       factory.quad(
         dataset_uri,
@@ -142,3 +123,4 @@ export class DatasetSummaryVoID extends DatasetSummary {
     return output;
   }
 }
+

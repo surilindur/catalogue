@@ -18,8 +18,9 @@
     "esModuleInterop": true
   },
   "include": [
-    "lib/**/*.ts",
-    "bin/**/*.ts"
+    "tsconfig.ts",
+    "bin/**/*.ts",
+    "src/**/*.ts"
   ],
   "exclude": [
     "**/node_modules",

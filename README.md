@@ -1,71 +1,38 @@
-<p align="center">
-    <img alt="logo" src="./images/logo.svg" width="220">
-</p>
+# SolidBench Summaries
 
-Catalogue is an experimental tool to generate dataset summaries, consisting of a data loader, dataset summary and a data serializer, wired together using [Components.js](https://github.com/LinkedSoftwareDependencies/Components.js/). The tool works by using a data loader to load and group the data by key, feeding it to a dataset summary, and serializing the dataset summary as RDF using a serializer module.
-
-The following data loaders have currently been implemented:
-
-* [**Filesystem data loader**](packages/data-loader-filesystem/) for loading from local files on disk.
-
-The following data serializers have been implemented:
-
-* [**Filesystem data serializer**](packages/data-serializer-filesystem/) for serializing to local files on disk.
+This is an experimental set of small scripts to generate dataset summaries primarily for SolidBench. The generation is not pipelined and not done in a streaming manner, so for very large datasets it will definitely not function.
 
 The following dataset summaries have been implemented:
 
-* [**VoID description**](packages/dataset-summary-void/) following the [Vocabulary of Interlinked Datasets (VoID)](https://www.w3.org/TR/void/). This summary provides, for example, the cardinalities of different predicates, as well as the total dataset size in triples, as well as the unique subject, predicate and object counts.
-* [**Bloom filter**](packages/dataset-summary-bloom/) as an approximate membership function (AMF) for checking whether the dataset contains specific entries. The generation is done using the [Bloem](https://github.com/wiedi/node-bloem) package.
-
-The following additional [Community Solid Server](https://github.com/CommunitySolidServer/CommunitySolidServer) components have been implemented:
-
-* [**FixedContentTypeMapperMeta**](packages/fixed-content-type-mapper-meta/) that is identical to the original `FixedContentTypeMapper` except it allows serving `.meta` files without the configured extension, by not processing requests for those paths.
-* [**MetricsHandler**](packages/metrics-handler/) that collects metrics about requests and exposes them at a configurable path on the server.
+* [**VoID description**](src/DatasetSummaryVoID.ts) following the [Vocabulary of Interlinked Datasets (VoID)](https://www.w3.org/TR/void/). This summary provides, for example, the cardinalities of different predicates, as well as the total dataset size in triples, as well as the unique subject, predicate and object counts.
+* [**Bloom filter**](src/DatasetSummaryBloom.ts) as an approximate membership function (AMF) for checking whether the dataset contains specific entries. The generation is done using the [Bloem](https://github.com/wiedi/node-bloem) package.
 
 ## Installing
 
 The tool is not published anywhere, because it is not intended for actual use and is only intended for experiments. After cloning the repository, it should be sufficient to install the dependencies and build:
 
-    $ yarn install --immutable
-    $ yarn build
+```bash
+$ yarn install --immutable
+$ yarn build
+```
 
-The configurations are in [engines/catalogue-config/config](engines/catalogue-config/config).
+The configurations are in [config/](config/).
 
 ## Usage
 
-The primary use case of this tool is to generate summaries for the data from [SolidBench](https://github.com/SolidBench/SolidBench.js) for benchmarking purposes. The default configuration generates summaries for each pod, and places them in a file called `.meta` at the pod root. Using [the provided custom `FixedContentTypeMapper`](packages/fixed-content-type-mapper-meta/) implementation for the [Community Solid Server](https://github.com/CommunitySolidServer/CommunitySolidServer/), the summaries are then served at the pod root URI when serving the dataset using the serve command from SolidBench.
+The primary use case of this tool is to generate summaries for the data from [SolidBench](https://github.com/SolidBench/SolidBench.js) for benchmarking purposes. The default configuration generates summaries for each pod, and places them in a file called `.meta` at the pod root. Using the `FixedContentTypeMapper` implementation from the [Community Solid Server](https://github.com/CommunitySolidServer/CommunitySolidServer/), the summaries are then served at the pod root URI when serving the dataset using the serve command from SolidBench.
 
-To generate SolidBench data:
+For example, the VoID descriptions can be generated with:
 
-    $ yarn solidbench-generate
-
-The VoID descriptions can be generated with:
-
-    $ yarn catalogue --config ./engines/catalogue-config/config/generator/void.json
+```bash
+$ yarn solidbench-summaries --config ./config/void.json
+```
 
 The Bloom filters can be generated with:
 
-    $ yarn catalogue --config ./engines/catalogue-config/config/generator/bloom.json
-
-The generated dataset can be served with the custom `FixedContentTypeMapper` and `MetricsHandler` with:
-
-    $ yarn serve
-
-The summaries can then be found amongst the metadata at pod roots, for example:
-
-    $ curl http://localhost:3000/pods/00000000000000000065/
-
-## Docker
-
-There is a Dockerfile provided that packs up the application and the generated data from `out-fragments/` into an image than can be used to serve it. This is experimental and is only intended for local use when needing the generated data elsewhere in a neat package. The Docker image can be built with:
-
-    $ docker build --network host --tag solidlab/catalogue:dev .
-
-And then ran elsewhere on the local system, `--init` seems necessary to make the image accept ctrl+c:
-
-    $ docker run --init --network host solidlab/catalogue:dev
-
-The image at `solidlab/catalogue` should not exist on Docker Hub, which is why it might be useful to use. Other tags should work, as well.
+```bash
+$ yarn solidbench-summaries --config ./config/bloom.json
+```
 
 ## Examples
 

@@ -1,0 +1,13 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/solidbench-summaries/^0.0.0/components/context.jsonld"
+  ],
+  "@graph": [
+    {
+      "comment": "Filesystem data loader",
+      "@id": "urn:solidbench-summaries:loader:filesystem",
+      "@type": "DataLoaderFilesystem",
+      "ignore": "\\.meta$"
+    }
+  ]
+}

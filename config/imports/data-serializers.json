@@ -1,0 +1,17 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/solidbench-summaries/^0.0.0/components/context.jsonld"
+  ],
+  "@graph": [
+    {
+      "comment": "Filesystem data serializer",
+      "@id": "urn:solidbench-summaries:serializer:filesystem",
+      "@type": "DataSerializerFilesystem",
+      "pathPattern": "^(.*\\/pods\\/[0-9]+)\\/",
+      "pathReplacement": "$1/.meta",
+      "format": "N-Quads",
+      "dryrun": true,
+      "overwrite": false
+    }
+  ]
+}

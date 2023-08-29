@@ -1,7 +1,8 @@
 import type * as RDF from '@rdfjs/types';
 import { Bloem } from 'bloem';
 import { DataFactory } from 'rdf-data-factory';
-import { DatasetSummary, type IDatasetSummaryArgs } from './DatasetSummary';
+import type { IDatasetSummaryArgs } from './DatasetSummary';
+import { DatasetSummary } from './DatasetSummary';
 import {
   IRI_A, IRI_MEM_APPROXIMATE_MEMBERSHIP_FUNCTION,
   IRI_MEM_BINARY_REPRESENTATION,
@@ -13,22 +14,19 @@ import {
   IRI_XSD_INTEGER,
 } from './Namespaces';
 
-/**
- * Class for generating a Bloom filter for a dataset.
- */
 export class DatasetSummaryBloom extends DatasetSummary {
   private readonly size: number;
   private readonly slices: number;
 
-  private subjectFilter: Bloem;
-  private predicateFilter: Bloem;
-  private objectFilter: Bloem;
-  private graphFilter: Bloem;
-  private classFilter: Bloem;
+  private readonly subjectFilter: Bloem;
+  private readonly predicateFilter: Bloem;
+  private readonly objectFilter: Bloem;
+  private readonly graphFilter: Bloem;
+  private readonly classFilter: Bloem;
 
-  private combinedFilter: Bloem;
+  private readonly combinedFilter: Bloem;
 
-  public constructor(args: IBloomFilterArgs) {
+  public constructor(args: IDatasetSummaryBloomArgs) {
     super(args);
     this.size = args.size;
     this.slices = args.slices;
@@ -41,23 +39,7 @@ export class DatasetSummaryBloom extends DatasetSummary {
     this.combinedFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
   }
 
-  public add(...quads: RDF.Quad[]): void {
-    for (const quad of quads) {
-      this.register(quad);
-    }
-  }
-
-  public reset(): void {
-    const zeroFilledBuffer: Buffer = Buffer.alloc(this.size);
-    this.subjectFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
-    this.predicateFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
-    this.objectFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
-    this.graphFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
-    this.classFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
-    this.combinedFilter = new Bloem(this.size, this.slices, zeroFilledBuffer);
-  }
-
-  private register(quad: RDF.Quad): void {
+  public register(quad: RDF.Quad): void {
     const namedNodeToBuffer = (node: RDF.NamedNode): Buffer => Buffer.from(node.value, 'utf8');
     if (quad.subject.termType === 'NamedNode') {
       const value: Buffer = namedNodeToBuffer(quad.subject);
@@ -84,10 +66,10 @@ export class DatasetSummaryBloom extends DatasetSummary {
     }
   }
 
-  public toRdf(dataset: string): RDF.Quad[] {
+  public quads(): RDF.Quad[] {
     const output: RDF.Quad[] = [];
     const factory: RDF.DataFactory = new DataFactory();
-    const datasetUri: RDF.NamedNode = factory.namedNode(this.replaceDatasetKeyValues(dataset));
+    const datasetUri: RDF.NamedNode = factory.namedNode(this.dataset);
     const filtersByProperty: Record<string, Bloem> = {
       // eslint-disable-next-line id-length
       s: this.subjectFilter,
@@ -143,7 +125,7 @@ export class DatasetSummaryBloom extends DatasetSummary {
   }
 }
 
-export interface IBloomFilterArgs extends IDatasetSummaryArgs {
+export interface IDatasetSummaryBloomArgs extends IDatasetSummaryArgs {
   size: number;
   slices: number;
 }

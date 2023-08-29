@@ -1,3 +1,3 @@
-import { runAppSync } from '../lib';
+import { runAppSync } from '../src';
 
 runAppSync();
