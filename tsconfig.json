@@ -3,10 +3,10 @@
   "compilerOptions": {
     "module": "commonjs",
     "lib": [
-      "es2021",
-      "dom"
+      "ESNext",
+      "DOM"
     ],
-    "target": "es6",
+    "target": "ESNext",
     "noImplicitAny": true,
     "removeComments": false,
     "preserveConstEnums": true,
