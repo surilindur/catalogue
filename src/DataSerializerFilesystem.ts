@@ -21,7 +21,7 @@ export class DataSerializerFilesystem extends DataSerializer {
     this.overwrite = args.overwrite;
   }
 
-  public async serialize(data: RDF.Quad[]): Promise<string[]> {
+  public serialize(data: RDF.Quad[]): string[] {
     const quadsByPath: Map<string, RDF.Quad[]> = new Map();
     const writtenPaths: string[] = [];
     for (const quad of data) {

@@ -9,13 +9,14 @@
   "lsd:module": true,
   "license": "MIT",
   "private": true,
-  "bin": "node bin/solidbench-summaries.js",
+  "bin": "bin/solidbench-summaries.js",
   "scripts": {
     "test": "jest ${1}",
     "lint": "eslint . --ext ts --ignore-pattern '*.d.ts' --max-warnings 0",
     "build": "yarn run build:ts && yarn run build:components",
     "build:ts": "tsc",
-    "build:components": "componentsjs-generator ."
+    "build:components": "componentsjs-generator .",
+    "solidbench": "NODE_OPTIONS=--max-old-space-size=8192 solidbench"
   },
   "dependencies": {
     "bloem": "^0.2.0",
@@ -29,6 +30,7 @@
     "@types/n3": "^1.0.0",
     "componentsjs-generator": "^3.0.0",
     "eslint": "^8.0.0",
+    "solidbench": "^1.0.0",
     "typescript": "^5.0.0"
   }
 }

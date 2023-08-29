@@ -7,7 +7,7 @@
       "comment": "Filesystem data loader",
       "@id": "urn:solidbench-summaries:loader:filesystem",
       "@type": "DataLoaderFilesystem",
-      "ignore": "\\.meta$"
+      "args_ignorePattern": "\\.meta$"
     }
   ]
 }

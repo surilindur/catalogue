@@ -2,14 +2,15 @@
 node_modules/
 components/
 
-# Error logs
+# SolidBench output
+out-*/
 
+# Error logs
 .yarn/
 yarn-error.log
 componentsjs-error-state.json
 
 # TypeScript compile output
-
 *.js
 *.js.map
 *.d.ts

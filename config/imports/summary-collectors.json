@@ -15,7 +15,7 @@
       "comment": "Summary collector for VoID descriptions",
       "@id": "urn:solidbench-summaries:collector:void",
       "@type": "SummaryCollectorVoID",
-      "datasetUriRegex": "^(?<key>.*(?<path>\\/pods\\/[0-9]+\\/))"
+      "args_datasetUriRegex": "^(?<key>.*(?<path>\\/pods\\/[0-9]+\\/))"
     }
   ]
 }

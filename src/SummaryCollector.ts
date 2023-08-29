@@ -10,24 +10,18 @@ export abstract class SummaryCollector<T extends DatasetSummary> implements ISum
     this.datasetSummariesByDataset = new Map();
   }
 
-  public load(stream: RDF.Stream): Promise<RDF.Quad[]> {
-    return new Promise((resolve, reject) => {
-      stream
-        .on('data', quad => {
-          const dataset = this.getDatasetForQuad(quad);
-          if (dataset) {
-            this.getSummary(dataset).register(quad);
-          }
-        })
-        .on('end', () => {
-          const summaryQuads: RDF.Quad[] = [];
-          for (const summary of this.datasetSummariesByDataset.values()) {
-            summaryQuads.push(...summary.quads());
-          }
-          resolve(summaryQuads);
-        })
-        .on('error', reject);
-    });
+  public add(quads: RDF.Quad[]): RDF.Quad[] {
+    for (const quad of quads) {
+      const dataset = this.getDatasetForQuad(quad);
+      if (dataset) {
+        this.getSummary(dataset).register(quad);
+      }
+    }
+    const summaryQuads: RDF.Quad[] = [];
+    for (const summary of this.datasetSummariesByDataset.values()) {
+      summaryQuads.push(...summary.quads());
+    }
+    return summaryQuads;
   }
 
   protected abstract getSummary(dataset: string): T;
@@ -43,7 +37,7 @@ export abstract class SummaryCollector<T extends DatasetSummary> implements ISum
 }
 
 export interface ISummaryCollector {
-  load: (stream: RDF.Stream) => Promise<RDF.Quad[]>;
+  add: (quads: RDF.Quad[]) => RDF.Quad[];
 }
 
 export interface ISummaryCollectorArgs {

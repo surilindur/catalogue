@@ -16,9 +16,9 @@ export class SummaryGenerator implements ISummaryGenerator {
   }
 
   public async run(): Promise<void> {
-    const stream = await this.loader.load(this.uri);
-    const summaries = await this.collector.load(stream);
-    const outputPaths = await this.serializer.serialize(summaries);
+    const quads = this.loader.load(this.uri);
+    const summaries = this.collector.add(quads);
+    const outputPaths = this.serializer.serialize(summaries);
     // eslint-disable-next-line no-console
     console.log(`Wrote a total of ${outputPaths.length} files`);
   }
