@@ -1,6 +1,7 @@
 {
   "source": "src",
   "ignoreComponents": [
-    "RegExp"
+    "RegExp",
+    "Map"
   ]
 }
