@@ -3,12 +3,13 @@ import type { SummaryGenerator } from './SummaryGenerator';
 
 export async function runApp(): Promise<void> {
   const config = process.argv[process.argv.indexOf('--config') + 1];
-  const target = process.argv[process.argv.indexOf('--target') + 1];
+  const targetIndex = process.argv.indexOf('--target');
+  const target = targetIndex > 0 ? process.argv[targetIndex + 1] : 'urn:solidbench-summaries:generator:default';
   const manager = await ComponentsManager.build({
     mainModulePath: __dirname,
   });
   await manager.configRegistry.register(config);
-  const generator = await manager.instantiate<SummaryGenerator>(`urn:solidbench-summaries:generator:${target}`);
+  const generator = await manager.instantiate<SummaryGenerator>(target);
   await generator.run();
 }
 

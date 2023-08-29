@@ -25,13 +25,13 @@ The primary use case of this tool is to generate summaries for the data from [So
 For example, the VoID descriptions can be generated with:
 
 ```bash
-$ yarn solidbench-summaries --config ./config/void.json
+$ yarn solidbench-summaries --config ./config/default.json --target urn:solidbench-summaries:generator:void
 ```
 
 The Bloom filters can be generated with:
 
 ```bash
-$ yarn solidbench-summaries --config ./config/bloom.json
+$ yarn solidbench-summaries --config ./config/default.json --target urn:solidbench-summaries:generator:bloom
 ```
 
 ## Examples
