@@ -10,7 +10,7 @@ on:
 
 env:
   NODE_VERSION: 20.x
-  YARN_VERSION: 3.x
+  YARN_VERSION: 3
 
 jobs:
   build:
@@ -26,7 +26,7 @@ jobs:
         cache: yarn
         cache-dependency-path: yarn.lock
     - name: Use Yarn ${{ env.YARN_VERSION }}
-      run: yarn set version ${{ env.YARN_VERSION }}
+      run: corepack prepare yarn@${{ env.YARN_VERSION }}
     - name: Install dependencies
       run: yarn install --immutable
     - name: Run ESLint
