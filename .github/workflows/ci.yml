@@ -10,7 +10,7 @@ on:
 
 env:
   NODE_VERSION: 20.x
-  YARN_VERSION: 3.x
+  YARN_VERSION: stable
 
 jobs:
   build:
