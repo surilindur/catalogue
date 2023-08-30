@@ -26,7 +26,7 @@ jobs:
         cache: yarn
         cache-dependency-path: yarn.lock
     - name: Use Yarn ${{ env.YARN_VERSION }}
-      run: corepack prepare yarn@${{ env.YARN_VERSION }}
+      run: corepack prepare yarn@${{ env.YARN_VERSION }} --activate
     - name: Install dependencies
       run: yarn install --immutable
     - name: Run ESLint
