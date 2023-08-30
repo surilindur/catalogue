@@ -7,24 +7,29 @@ import { DataLoader, type IDataLoaderArgs } from './DataLoader';
 export class DataLoaderFilesystem extends DataLoader {
   private readonly prefix: string = 'file://';
   private readonly ignorePattern: RegExp | undefined;
+  private readonly datasetPattern: RegExp;
+  private readonly datasetPatternReplacement: string;
+  private readonly datasetQuads: Map<string, RDF.Quad[]>;
 
   private paths: string[];
-  private readonly quads: RDF.Quad[];
 
   public constructor(args: IDataLoaderFilesystemArgs) {
     super(args);
     this.ignorePattern = args.ignorePattern ? new RegExp(args.ignorePattern, 'u') : undefined;
+    this.datasetPattern = new RegExp(args.datasetPattern, 'u');
+    this.datasetPatternReplacement = args.datasetPatternReplacement;
+    this.datasetQuads = new Map();
     this.paths = [];
-    this.quads = [];
   }
 
-  public load(uri: string): RDF.Quad[] {
+  public load(uri: string): Map<string, RDF.Quad[]> {
     this.paths.push(uri.replace(this.prefix, ''));
     this.loadDataFromPaths();
-    return this.quads;
+    return this.datasetQuads;
   }
 
   private loadDataFromPaths(): void {
+    let previousDataset = '';
     while (this.paths.length > 0) {
       const path = this.paths[0];
       if (!this.ignorePattern?.test(path)) {
@@ -35,11 +40,20 @@ export class DataLoaderFilesystem extends DataLoader {
             this.paths.push(join(path, entry));
           }
         } else if (stat.isFile()) {
-          // eslint-disable-next-line no-console
-          console.log(`Reading: ${path}`);
+          const dataset = path.replace(this.datasetPattern, this.datasetPatternReplacement);
+          if (dataset !== previousDataset) {
+            previousDataset = dataset;
+            // eslint-disable-next-line no-console
+            console.log(`Reading for dataset: ${dataset}`);
+          }
           const parser = new Parser();
           const contents = readFileSync(path, { encoding: 'utf8' });
-          this.quads.push(...parser.parse(contents));
+          const quads = parser.parse(contents);
+          if (!this.datasetQuads.has(dataset)) {
+            this.datasetQuads.set(dataset, quads);
+          } else {
+            this.datasetQuads.get(dataset)!.push(...quads);
+          }
         }
       }
       this.paths = this.paths.length > 1 ? this.paths.slice(1) : [];
@@ -51,5 +65,10 @@ export interface IDataLoaderFilesystemArgs extends IDataLoaderArgs {
   /**
    * Regular expression for paths to ignore.
    */
-  ignorePattern: string;
+  ignorePattern: string | undefined;
+  /**
+   * Regular expression and replacement value to use for getting dataset URI from the document URI.
+   */
+  datasetPattern: string;
+  datasetPatternReplacement: string;
 }

@@ -6,52 +6,43 @@ import { DataSerializer, type IDataSerializerArgs } from './DataSerializer';
 export class DataSerializerFilesystem extends DataSerializer {
   private readonly format: string;
   private readonly prefixes: Record<string, string> | undefined;
-  private readonly pathPattern: string;
-  private readonly pathReplacement: string;
-  private readonly dryrun: boolean;
+  private readonly pathPattern: RegExp;
+  private readonly pathPatternReplacement: string;
+  private readonly listonly: boolean;
   private readonly overwrite: boolean;
 
   public constructor(args: IDataSerializerFilesystemArgs) {
     super(args);
     this.format = args.format;
     this.prefixes = args.prefixes;
-    this.pathPattern = args.pathPattern;
-    this.pathReplacement = args.pathReplacement;
-    this.dryrun = args.dryrun;
+    this.pathPattern = new RegExp(args.pathPattern, 'u');
+    this.pathPatternReplacement = args.pathPatternReplacement;
+    this.listonly = args.listonly;
     this.overwrite = args.overwrite;
   }
 
-  public serialize(data: RDF.Quad[]): string[] {
-    const quadsByPath: Map<string, RDF.Quad[]> = new Map();
+  public serialize(datasetSummaries: Map<string, RDF.Quad[]>): string[] {
     const writtenPaths: string[] = [];
-    for (const quad of data) {
-      const path = quad.subject.value.replace(this.pathPattern, this.pathReplacement);
-      if (quadsByPath.has(path)) {
-        quadsByPath.get(path)!.push(quad);
-      } else {
-        quadsByPath.set(path, [ quad ]);
+    for (const [ dataset, quads ] of datasetSummaries) {
+      const serializationPath = dataset.replace(this.pathPattern, this.pathPatternReplacement);
+      const serializationNotes = [];
+      if (this.listonly) {
+        serializationNotes.push('listonly');
+      } else if (existsSync(serializationPath)) {
+        serializationNotes.push('exists');
+        serializationNotes.push(this.overwrite ? 'overwrite' : 'skip');
       }
-    }
-    for (const [ path, quads ] of quadsByPath) {
-      if (!this.dryrun && existsSync(path)) {
-        if (!this.overwrite) {
-          throw new Error(`Target already exists: ${path}`);
-        } else {
-          // eslint-disable-next-line no-console
-          console.log(`Delete: ${path}`);
-          unlinkSync(path);
+      const serializationNotesString = serializationNotes.length > 0 ? `(${serializationNotes.join(',')}) ` : '';
+      // eslint-disable-next-line no-console
+      console.log(`Serialize ${serializationNotesString}${serializationPath}`);
+      if (!this.listonly) {
+        if (existsSync(serializationPath) && this.overwrite) {
+          unlinkSync(serializationPath);
         }
-      }
-      const writer: Writer = new Writer({ format: this.format, prefixes: this.prefixes });
-      const output: string = writer.quadsToString(data);
-      if (this.dryrun) {
-        // eslint-disable-next-line no-console
-        console.log(path, output.split('\n'));
-      } else {
-        // eslint-disable-next-line no-console
-        console.log(`Serialize: ${path}`);
-        writeFileSync(path, output);
-        writtenPaths.push(path);
+        const writer: Writer = new Writer({ format: this.format, prefixes: this.prefixes });
+        const output: string = writer.quadsToString(quads);
+        writeFileSync(serializationPath, output);
+        writtenPaths.push(serializationPath);
       }
     }
     return writtenPaths;
@@ -60,9 +51,9 @@ export class DataSerializerFilesystem extends DataSerializer {
 
 export interface IDataSerializerFilesystemArgs extends IDataSerializerArgs {
   pathPattern: string;
-  pathReplacement: string;
+  pathPatternReplacement: string;
   format: string;
   prefixes?: Record<string, string>;
-  dryrun: boolean;
+  listonly: boolean;
   overwrite: boolean;
 }

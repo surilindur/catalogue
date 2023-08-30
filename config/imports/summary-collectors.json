@@ -7,15 +7,13 @@
       "comment": "Summary collector for Bloom filters",
       "@id": "urn:solidbench-summaries:collector:bloom",
       "@type": "SummaryCollectorBloom",
-      "datasetUriRegex": "^(?<key>.*(?<path>\\/pods\\/[0-9]+\\/))",
-      "bloemSize": 1024,
-      "bloemSlices": 2
+      "args_bloemSize": 1024,
+      "args_bloemSlices": 2
     },
     {
       "comment": "Summary collector for VoID descriptions",
       "@id": "urn:solidbench-summaries:collector:void",
-      "@type": "SummaryCollectorVoID",
-      "args_datasetUriRegex": "^(?<key>.*(?<path>\\/pods\\/[0-9]+\\/))"
+      "@type": "SummaryCollectorVoID"
     }
   ]
 }

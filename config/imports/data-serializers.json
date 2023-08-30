@@ -7,11 +7,11 @@
       "comment": "Filesystem data serializer",
       "@id": "urn:solidbench-summaries:serializer:filesystem",
       "@type": "DataSerializerFilesystem",
-      "pathPattern": "^(.*\\/pods\\/[0-9]+)\\/",
-      "pathReplacement": "$1/.meta",
-      "format": "N-Quads",
-      "dryrun": true,
-      "overwrite": false
+      "args_pathPattern": "(https?):\\/\\/([a-z0-9]+):([0-9]+)\\/(.*)",
+      "args_pathPatternReplacement": "out-fragments/$1/$2_$3/$4.meta",
+      "args_format": "N-Quads",
+      "args_listonly": false,
+      "args_overwrite": true
     }
   ]
 }

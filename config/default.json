@@ -12,31 +12,31 @@
       "comment": "Bloom filter summary generator",
       "@id": "urn:solidbench-summaries:generator:bloom",
       "@type": "SummaryGenerator",
-      "loader": {
+      "args_loader": {
         "@id": "urn:solidbench-summaries:loader:filesystem"
       },
-      "serializer": {
+      "args_serializer": {
         "@id": "urn:solidbench-summaries:serializer:filesystem"
       },
-      "collector": {
+      "args_collector": {
         "@id": "urn:solidbench-summaries:collector:bloom"
       },
-      "uri": "file://./out-fragments/http/"
+      "args_uri": "file://./out-fragments/http/localhost_3000/pods/"
     },
     {
       "comment": "VoID description summary generator",
       "@id": "urn:solidbench-summaries:generator:void",
       "@type": "SummaryGenerator",
-      "loader": {
+      "args_loader": {
         "@id": "urn:solidbench-summaries:loader:filesystem"
       },
-      "serializer": {
+      "args_serializer": {
         "@id": "urn:solidbench-summaries:serializer:filesystem"
       },
-      "collector": {
+      "args_collector": {
         "@id": "urn:solidbench-summaries:collector:void"
       },
-      "uri": "file://./out-fragments/http/"
+      "args_uri": "file://./out-fragments/http/localhost_3000/pods/"
     }
   ]
 }
