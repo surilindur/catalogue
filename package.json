@@ -30,7 +30,6 @@
     "@types/n3": "^1.0.0",
     "componentsjs-generator": "^3.0.0",
     "eslint": "^8.0.0",
-    "solidbench": "^1.0.0",
     "typescript": "^5.0.0"
   }
 }
