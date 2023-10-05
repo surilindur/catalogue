@@ -1,6 +1,6 @@
-# SolidBench Summaries
+# Catalogue
 
-This is an experimental set of small scripts to generate dataset summaries primarily for SolidBench. The generation is not pipelined and not done in a streaming manner, so for very large datasets it will definitely not function.
+This is an experimental set of small scripts to generate dataset summaries primarily for SolidBench. The generation is **not** pipelined and **not** done in a streaming manner, so for very large datasets it will definitely **not function**. When I find the time, I will try to look into fixing this.
 
 The following dataset summaries have been implemented:
 
@@ -25,13 +25,13 @@ The primary use case of this tool is to generate summaries for the data from [So
 For example, the VoID descriptions can be generated with:
 
 ```bash
-$ yarn solidbench-summaries --config ./config/default.json --target urn:solidbench-summaries:generator:void
+$ yarn catalogue --config ./config/default.json --target urn:catalogue:generator:void
 ```
 
 The Bloom filters can be generated with:
 
 ```bash
-$ yarn solidbench-summaries --config ./config/default.json --target urn:solidbench-summaries:generator:bloom
+$ yarn catalogue --config ./config/default.json --target urn:catalogue:generator:bloom
 ```
 
 ## Examples

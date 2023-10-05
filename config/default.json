@@ -1,6 +1,6 @@
 {
   "@context": [
-    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/solidbench-summaries/^0.0.0/components/context.jsonld"
+    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/catalogue/^0.0.0/components/context.jsonld"
   ],
   "import": [
     "imports/data-loaders.json",
@@ -10,31 +10,31 @@
   "@graph": [
     {
       "comment": "Bloom filter summary generator",
-      "@id": "urn:solidbench-summaries:generator:bloom",
+      "@id": "urn:catalogue:generator:bloom",
       "@type": "SummaryGenerator",
       "args_loader": {
-        "@id": "urn:solidbench-summaries:loader:filesystem"
+        "@id": "urn:catalogue:loader:filesystem"
       },
       "args_serializer": {
-        "@id": "urn:solidbench-summaries:serializer:filesystem"
+        "@id": "urn:catalogue:serializer:filesystem"
       },
       "args_collector": {
-        "@id": "urn:solidbench-summaries:collector:bloom"
+        "@id": "urn:catalogue:collector:bloom"
       },
       "args_uri": "file://./out-fragments/http/localhost_3000/pods/"
     },
     {
       "comment": "VoID description summary generator",
-      "@id": "urn:solidbench-summaries:generator:void",
+      "@id": "urn:catalogue:generator:void",
       "@type": "SummaryGenerator",
       "args_loader": {
-        "@id": "urn:solidbench-summaries:loader:filesystem"
+        "@id": "urn:catalogue:loader:filesystem"
       },
       "args_serializer": {
-        "@id": "urn:solidbench-summaries:serializer:filesystem"
+        "@id": "urn:catalogue:serializer:filesystem"
       },
       "args_collector": {
-        "@id": "urn:solidbench-summaries:collector:void"
+        "@id": "urn:catalogue:collector:void"
       },
       "args_uri": "file://./out-fragments/http/localhost_3000/pods/"
     }

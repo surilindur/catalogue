@@ -1,11 +1,11 @@
 {
   "@context": [
-    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/solidbench-summaries/^0.0.0/components/context.jsonld"
+    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/catalogue/^0.0.0/components/context.jsonld"
   ],
   "@graph": [
     {
       "comment": "Filesystem data serializer",
-      "@id": "urn:solidbench-summaries:serializer:filesystem",
+      "@id": "urn:catalogue:serializer:filesystem",
       "@type": "DataSerializerFilesystem",
       "args_pathPattern": "(https?):\\/\\/([a-z0-9]+):([0-9]+)\\/(.*)",
       "args_pathPatternReplacement": "out-fragments/$1/$2_$3/$4.meta",

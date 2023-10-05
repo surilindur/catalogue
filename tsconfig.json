@@ -1,21 +1,15 @@
 {
-  "compileOnSave": true,
   "compilerOptions": {
-    "module": "commonjs",
     "lib": [
       "ESNext",
       "DOM"
     ],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "target": "ESNext",
-    "noImplicitAny": true,
-    "removeComments": false,
-    "preserveConstEnums": true,
     "sourceMap": true,
-    "inlineSources": true,
     "declaration": true,
-    "importHelpers": false,
-    "strict": true,
-    "esModuleInterop": true
+    "strict": true
   },
   "include": [
     "tsconfig.ts",
@@ -23,7 +17,7 @@
     "src/**/*.ts"
   ],
   "exclude": [
-    "**/node_modules",
-    "**/test/*"
+    "node_modules",
+    "test"
   ]
 }

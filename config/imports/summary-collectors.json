@@ -1,18 +1,18 @@
 {
   "@context": [
-    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/solidbench-summaries/^0.0.0/components/context.jsonld"
+    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/catalogue/^0.0.0/components/context.jsonld"
   ],
   "@graph": [
     {
       "comment": "Summary collector for Bloom filters",
-      "@id": "urn:solidbench-summaries:collector:bloom",
+      "@id": "urn:catalogue:collector:bloom",
       "@type": "SummaryCollectorBloom",
       "args_bloemSize": 1024,
       "args_bloemSlices": 2
     },
     {
       "comment": "Summary collector for VoID descriptions",
-      "@id": "urn:solidbench-summaries:collector:void",
+      "@id": "urn:catalogue:collector:void",
       "@type": "SummaryCollectorVoID"
     }
   ]

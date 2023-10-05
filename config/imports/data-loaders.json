@@ -1,11 +1,11 @@
 {
   "@context": [
-    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/solidbench-summaries/^0.0.0/components/context.jsonld"
+    "https://linkedsoftwaredependencies.org/bundles/npm/@solidlab/catalogue/^0.0.0/components/context.jsonld"
   ],
   "@graph": [
     {
       "comment": "Filesystem data loader",
-      "@id": "urn:solidbench-summaries:loader:filesystem",
+      "@id": "urn:catalogue:loader:filesystem",
       "@type": "DataLoaderFilesystem",
       "args_ignorePattern": "\\.meta$",
       "args_datasetPattern": ".*out-fragments\\/(https?)\\/([a-z0-9]+)_([0-9]+)\\/(pods\\/[0-9]+).*",

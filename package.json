@@ -1,27 +1,30 @@
 {
-  "name": "@solidlab/solidbench-summaries",
+  "name": "@solidlab/catalogue",
   "version": "0.0.0",
   "description": "Experimental summary generation scripts for SolidBench",
   "main": "src/index.js",
   "types": "src/index",
-  "repository": "https://github.com/surilindur/solidbench-summaries",
+  "repository": "https://github.com/surilindur/catalogue",
   "author": "surilindur",
   "lsd:module": true,
   "license": "MIT",
   "private": true,
-  "bin": "bin/solidbench-summaries.js",
+  "bin": "bin/catalogue.js",
+  "packageManager": "yarn@3.6.4",
   "scripts": {
     "test": "jest ${1}",
     "lint": "eslint . --ext ts --ignore-pattern '*.d.ts' --max-warnings 0",
     "build": "yarn run build:ts && yarn run build:components",
     "build:ts": "tsc",
-    "build:components": "componentsjs-generator .",
+    "build:components": "componentsjs-generator",
     "solidbench": "NODE_OPTIONS=--max-old-space-size=8192 solidbench"
   },
   "dependencies": {
     "bloem": "^0.2.0",
     "componentsjs": "^5.0.0",
-    "rdf-data-factory": "^1.0.0"
+    "n3": "^1.0.0",
+    "rdf-data-factory": "^1.0.0",
+    "yargs": "^17.0.0"
   },
   "devDependencies": {
     "@rdfjs/types": "*",
