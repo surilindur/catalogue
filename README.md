@@ -12,8 +12,8 @@ The following dataset summaries have been implemented:
 The tool is not published anywhere, because it is not intended for actual use and is only intended for experiments. After cloning the repository, it should be sufficient to install the dependencies and build:
 
 ```bash
-$ yarn install --immutable
-$ yarn build
+yarn install --immutable
+yarn build
 ```
 
 The configurations are in [config/](config/).
@@ -25,20 +25,36 @@ The primary use case of this tool is to generate summaries for the data from [So
 For example, the VoID descriptions can be generated with:
 
 ```bash
-$ yarn catalogue --config ./config/default.json --target urn:catalogue:generator:void
+yarn catalogue --config ./config/default.json --target urn:catalogue:generator:void
 ```
 
 The Bloom filters can be generated with:
 
 ```bash
-$ yarn catalogue --config ./config/default.json --target urn:catalogue:generator:bloom
+yarn catalogue --config ./config/default.json --target urn:catalogue:generator:bloom
 ```
+
+## Docker
+
+There is a Dockerfile provided for building the repository into a Docker image:
+
+```bash
+docker build --network host --tag solidlab/catalogue:dev .
+```
+
+The image can then be used to run the tool directly:
+
+```bash
+docker run solidlab/catalogue:dev --help
+```
+
+The image is not published anywhere and should not be published anywhere, either.
 
 ## Examples
 
 Example VoID description for a pod, truncated due to length:
 
-```
+```xsd
 <http://localhost:3000/pods/00000000000000000065/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://rdfs.org/ns/void#Dataset> .
 <http://localhost:3000/pods/00000000000000000065/> <http://rdfs.org/ns/void#uriSpace> "http://localhost:3000/pods/00000000000000000065/" .
 <http://localhost:3000/pods/00000000000000000065/> <http://rdfs.org/ns/void#triples> "2936"^^<http://www.w3.org/2001/XMLSchema#integer> .
@@ -70,7 +86,7 @@ _:df_1654_13 <http://rdfs.org/ns/void#triples> "1"^^<http://www.w3.org/2001/XMLS
 
 Example Bloom filter for all the subjects in a pod:
 
-```
+```xsd
 <http://localhost:3000/pods/00000000000000000065/#bloomfilter-s> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://semweb.mmlab.be/ns/membership#ApproximateMembershipFunction> .
 <http://localhost:3000/pods/00000000000000000065/#bloomfilter-s> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://semweb.mmlab.be/ns/membership#BloomFilter> .
 <http://localhost:3000/pods/00000000000000000065/#bloomfilter-s> <http://semweb.mmlab.be/ns/membership#sourceCollection> <http://localhost:3000/pods/00000000000000000065/> .

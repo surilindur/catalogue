@@ -1,6 +1,6 @@
-import type { IDataLoader } from './DataLoader';
-import type { IDataSerializer } from './DataSerializer';
-import type { ISummaryCollector } from './SummaryCollector';
+import type { ISummaryCollector } from '../collectors/SummaryCollector';
+import type { IDataLoader } from '../loaders/DataLoader';
+import type { IDataSerializer } from '../serializers/DataSerializer';
 
 export class SummaryGenerator implements ISummaryGenerator {
   private readonly loader: IDataLoader;

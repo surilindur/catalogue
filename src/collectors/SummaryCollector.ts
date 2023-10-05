@@ -1,5 +1,5 @@
 import type * as RDF from '@rdfjs/types';
-import type { DatasetSummary } from './DatasetSummary';
+import type { DatasetSummary } from '../summaries/DatasetSummary';
 
 export abstract class SummaryCollector<T extends DatasetSummary> implements ISummaryCollector {
   protected readonly datasetSummariesByDataset: Map<string, T>;

@@ -1,4 +1,4 @@
-import { DatasetSummaryVoID } from './DatasetSummaryVoID';
+import { DatasetSummaryVoID } from '../summaries/DatasetSummaryVoID';
 import { SummaryCollector } from './SummaryCollector';
 
 /**

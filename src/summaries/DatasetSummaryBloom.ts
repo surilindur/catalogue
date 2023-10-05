@@ -1,8 +1,6 @@
 import type * as RDF from '@rdfjs/types';
 import { Bloem } from 'bloem';
 import { DataFactory } from 'rdf-data-factory';
-import type { IDatasetSummaryArgs } from './DatasetSummary';
-import { DatasetSummary } from './DatasetSummary';
 import {
   IRI_A, IRI_MEM_APPROXIMATE_MEMBERSHIP_FUNCTION,
   IRI_MEM_BINARY_REPRESENTATION,
@@ -12,7 +10,9 @@ import {
   IRI_MEM_PROJECTED_PROPERTY,
   IRI_MEM_SOURCE_COLLECTION,
   IRI_XSD_INTEGER,
-} from './Namespaces';
+} from '../utils/Namespaces';
+import type { IDatasetSummaryArgs } from './DatasetSummary';
+import { DatasetSummary } from './DatasetSummary';
 
 export class DatasetSummaryBloom extends DatasetSummary {
   private readonly size: number;

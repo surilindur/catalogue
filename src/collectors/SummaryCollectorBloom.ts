@@ -1,4 +1,4 @@
-import { DatasetSummaryBloom } from './DatasetSummaryBloom';
+import { DatasetSummaryBloom } from '../summaries/DatasetSummaryBloom';
 import { type ISummaryCollectorArgs, SummaryCollector } from './SummaryCollector';
 
 /**

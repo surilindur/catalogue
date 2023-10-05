@@ -1,7 +1,5 @@
 import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';
-import type { IDatasetSummaryArgs } from './DatasetSummary';
-import { DatasetSummary } from './DatasetSummary';
 import {
   IRI_A,
   IRI_XSD_INTEGER,
@@ -14,7 +12,9 @@ import {
   IRI_VOID_PROPERTY_PARTITION,
   IRI_VOID_TRIPLES,
   IRI_VOID_URI_SPACE,
-} from './Namespaces';
+} from '../utils/Namespaces';
+import type { IDatasetSummaryArgs } from './DatasetSummary';
+import { DatasetSummary } from './DatasetSummary';
 
 export class DatasetSummaryVoID extends DatasetSummary {
   private readonly subjectCardinalities: Record<string, number>;
