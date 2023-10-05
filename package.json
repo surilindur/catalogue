@@ -32,7 +32,7 @@
     "@types/bloem": "^0.2.0",
     "@types/n3": "^1.0.0",
     "componentsjs-generator": "^3.0.0",
-    "eslint": "^8.0.0",
+    "eslint": "8.48.0",
     "typescript": "^5.0.0"
   }
 }
