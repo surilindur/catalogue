@@ -14,6 +14,7 @@ COPY --from=build /opt/catalogue/package.json ./package.json
 COPY --from=build /opt/catalogue/bin ./bin
 COPY --from=build /opt/catalogue/src ./src
 COPY --from=build /opt/catalogue/config ./config
+COPY --from=build /opt/catalogue/components ./components
 COPY --from=build /opt/catalogue/node_modules ./node_modules
 
 CMD [ "./bin/catalogue.js" ]
