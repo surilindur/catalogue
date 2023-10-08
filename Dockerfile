@@ -4,7 +4,7 @@ WORKDIR /opt/catalogue
 
 COPY . .
 
-RUN corepack enable && yarn install --immutable
+RUN corepack enable && yarn install --immutable && yarn build
 
 FROM gcr.io/distroless/nodejs20-debian12
 
