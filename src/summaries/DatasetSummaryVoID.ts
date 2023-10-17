@@ -1,13 +1,13 @@
+import { PassThrough } from 'node:stream';
 import type * as RDF from '@rdfjs/types';
-import { AsyncIterator } from 'asynciterator';
 import { DataFactory } from 'rdf-data-factory';
-import type { QuadWithSource } from '..';
 import { RDFS, XSD, VoID } from '../common/Namespaces';
+import type { QuadWithSource } from '../loaders/DataLoader';
 import { DatasetSummary } from './DatasetSummary';
 
 export class DatasetSummaryVoID extends DatasetSummary {
-  public async from(stream: AsyncIterator<QuadWithSource>): Promise<AsyncIterator<RDF.Quad>> {
-    const output = new AsyncIterator<RDF.Quad>();
+  public async from(stream: RDF.Stream<QuadWithSource>): Promise<RDF.Stream> {
+    const output = new PassThrough({ objectMode: true });
     const descriptions: Map<string, IVoIDDescription> = new Map();
     stream.on('data', (quad: QuadWithSource) => {
       const dataset = this.sourceToDataset(quad.source);
@@ -68,7 +68,7 @@ export class DatasetSummaryVoID extends DatasetSummary {
       const df = new DataFactory();
       for (const [ uri, desc ] of descriptions) {
         const ds = df.namedNode(uri);
-        output.append([
+        [
           df.quad(ds, RDFS.type, VoID.Dataset),
           df.quad(ds, RDFS.type, VoID.DatasetDescription),
           df.quad(ds, VoID.uriSpace, df.literal(uri, XSD.string)),
@@ -77,29 +77,31 @@ export class DatasetSummaryVoID extends DatasetSummary {
           df.quad(ds, VoID.properties, df.literal(desc.propertyPartitions.size.toString(10), XSD.integer)),
           df.quad(ds, VoID.distinctObjects, df.literal(desc.distinctObjects.size.toString(10), XSD.integer)),
           df.quad(ds, VoID.distinctSubjects, df.literal(desc.distinctSubjects.size.toString(10), XSD.integer)),
-        ]);
+        ].forEach(quad => output.write(quad));
         for (const [ prop, part ] of desc.propertyPartitions) {
           const pp = df.blankNode();
-          output.append([
+          [
             df.quad(ds, VoID.propertyPartition, pp),
             df.quad(pp, RDFS.type, VoID.Dataset),
             df.quad(pp, VoID.property, df.namedNode(prop)),
             df.quad(pp, VoID.triples, df.literal(part.triples.toString(10), XSD.integer)),
             df.quad(pp, VoID.distinctObjects, df.literal(part.distinctObjects.size.toString(10), XSD.integer)),
             df.quad(pp, VoID.distinctSubjects, df.literal(part.distinctSubjects.size.toString(10), XSD.integer)),
-          ]);
+          ].forEach(quad => output.write(quad));
         }
         for (const [ cls, part ] of desc.classPartitions) {
           const cp = df.blankNode();
-          output.append([
+          [
             df.quad(ds, VoID.classPartition, cp),
             df.quad(cp, RDFS.type, VoID.Dataset),
             df.quad(cp, VoID.class, df.namedNode(cls)),
             df.quad(cp, VoID.entities, df.literal(part.entities.size.toString(10), XSD.integer)),
-          ]);
+          ].forEach(quad => output.write(quad));
         }
+        // eslint-disable-next-line no-console
+        console.log(`Produced VoID description for <${ds.value}>`);
       }
-      output.emit('end');
+      output.end();
     }).on('error', error => output.emit('error', error));
 
     return output;

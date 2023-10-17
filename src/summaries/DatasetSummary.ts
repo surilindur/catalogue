@@ -1,5 +1,4 @@
 import type * as RDF from '@rdfjs/types';
-import type { AsyncIterator } from 'asynciterator';
 import type { QuadWithSource } from '../loaders/DataLoader';
 
 export abstract class DatasetSummary implements IDatasetSummary {
@@ -11,7 +10,7 @@ export abstract class DatasetSummary implements IDatasetSummary {
     this.datasetRegexReplacement = args.datasetRegexReplacement;
   }
 
-  public abstract from(stream: AsyncIterator<QuadWithSource>): Promise<AsyncIterator<RDF.Quad>>;
+  public abstract from(stream: RDF.Stream<QuadWithSource>): Promise<RDF.Stream>;
 
   protected sourceToDataset(source: string): string | undefined {
     if (this.datasetRegex.test(source)) {
@@ -21,7 +20,7 @@ export abstract class DatasetSummary implements IDatasetSummary {
 }
 
 export interface IDatasetSummary {
-  from: (stream: AsyncIterator<QuadWithSource>) => Promise<AsyncIterator<RDF.Quad>>;
+  from: (stream: RDF.Stream<QuadWithSource>) => Promise<RDF.Stream>;
 }
 
 export interface IDatasetSummaryArgs {

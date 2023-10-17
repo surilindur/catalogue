@@ -2,14 +2,8 @@ import { createWriteStream, constants } from 'node:fs';
 import { access } from 'node:fs/promises';
 import { resolve as resolvePath } from 'node:path';
 import type * as RDF from '@rdfjs/types';
-import type { AsyncIterator } from 'asynciterator';
 import { StreamWriter } from 'n3';
 import { DataSerializer, type IDataSerializerArgs } from './DataSerializer';
-
-const FORMAT_EXTENSIONS: Record<string, string> = {
-  'application/n-quads': 'nq',
-  'text/turtle': 'ttl',
-};
 
 export class DataSerializerFilesystem extends DataSerializer {
   private readonly format: string;
@@ -25,11 +19,11 @@ export class DataSerializerFilesystem extends DataSerializer {
     this.overwrite = args.overwrite;
   }
 
-  public async serialize(stream: AsyncIterator<RDF.Quad>): Promise<URL[]> {
+  public async serialize(pods: URL, stream: RDF.Stream): Promise<URL[]> {
     return new Promise((resolve, reject) => {
       const writers: Map<URL, StreamWriter> = new Map();
       stream.on('data', (quad: RDF.Quad) => {
-        const outputUri = this.subjectToOutputUri(quad.subject);
+        const outputUri = this.subjectToOutputUri(pods, quad.subject);
         if (outputUri) {
           const existingWriter = writers.get(outputUri);
           if (existingWriter) {
@@ -53,7 +47,7 @@ export class DataSerializerFilesystem extends DataSerializer {
   }
 
   private async outputUriToStreamWriter(uri: URL): Promise<StreamWriter> {
-    const path = resolvePath(`${uri.toString().replace('file://', '')}.${FORMAT_EXTENSIONS[this.format]}`);
+    const path = resolvePath(uri.toString().replace('file://', ''));
     const writer = new StreamWriter({ format: this.format, prefixes: this.prefixes });
     if (!this.listonly) {
       let createWriter = false;
@@ -67,6 +61,8 @@ export class DataSerializerFilesystem extends DataSerializer {
         createWriter = true;
       }
       if (createWriter) {
+        // eslint-disable-next-line no-console
+        console.log(`Serialize <${uri}>`);
         const stream = createWriteStream(path, { encoding: 'utf-8' });
         writer.pipe(stream);
       }

@@ -5,6 +5,7 @@ export * from './loaders/DataLoaderFilesystem';
 // Data Serializers
 export * from './serializers/DataSerializer';
 export * from './serializers/DataSerializerFilesystem';
+export * from './serializers/DataSerializerConsole';
 
 // Dataset Summaries
 export * from './summaries/DatasetSummary';

@@ -7,7 +7,7 @@
       "comment": "Filesystem data loader",
       "@id": "urn:catalogue:loader:filesystem",
       "@type": "DataLoaderFilesystem",
-      "ignorePattern": "\\.meta$"
+      "args_ignorePattern": "\\.meta$"
     }
   ]
 }

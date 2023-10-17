@@ -20,7 +20,6 @@
     "solidbench": "NODE_OPTIONS=--max-old-space-size=8192 solidbench"
   },
   "dependencies": {
-    "asynciterator": "^3.0.0",
     "bloem": "^0.2.0",
     "componentsjs": "^5.0.0",
     "n3": "^1.0.0",

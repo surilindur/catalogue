@@ -1,4 +1,5 @@
-import { UnionIterator } from 'asynciterator';
+import { PassThrough } from 'node:stream';
+import type * as RDF from '@rdfjs/types';
 import type { IDataLoader } from '../loaders/DataLoader';
 import type { IDataSerializer } from '../serializers/DataSerializer';
 import type { IDatasetSummary } from '../summaries/DatasetSummary';
@@ -14,25 +15,38 @@ export class SummaryGenerator implements ISummaryGenerator {
     this.summaries = args.summaries;
   }
 
-  public async run(target: string): Promise<void> {
-    const uri = new URL(target);
-    const loader = this.loaders.find(ld => ld.test(uri));
+  public async run(pods: URL): Promise<void> {
+    const loader = this.loaders.find(ld => ld.test(pods));
     if (!loader) {
-      throw new Error(`No available loaders for target ${uri}`);
+      throw new Error(`No available loaders for target ${pods}`);
     }
-    const dataStream = await loader.load(uri);
-    const summaryStreams = await Promise.all(this.summaries.map(summary => summary.from(dataStream.clone())));
-    const summaryStream = new UnionIterator(summaryStreams);
-    for (const serializer of this.serializers) {
-      await serializer.serialize(summaryStream.clone());
+    const dataStream = await loader.load(pods);
+    const dataPassThrough = this.passThroughFromRdfStream(dataStream);
+    for (const summary of this.summaries) {
+      const summaryInput = new PassThrough({ objectMode: true });
+      dataPassThrough.pipe(summaryInput);
+      const summaryOutput = await summary.from(summaryInput);
+      const serializationPassThrough = this.passThroughFromRdfStream(summaryOutput);
+      for (const serializer of this.serializers) {
+        const serializationInput = new PassThrough({ objectMode: true });
+        serializationPassThrough.pipe(serializationInput);
+        await serializer.serialize(pods, serializationInput);
+      }
     }
-    dataStream.destroy();
-    summaryStream.destroy();
+  }
+
+  private passThroughFromRdfStream(stream: RDF.Stream): PassThrough {
+    const passThrough = new PassThrough({ objectMode: true });
+    stream
+      .on('data', data => passThrough.write(data))
+      .on('end', () => passThrough.end())
+      .on('error', error => passThrough.destroy(error));
+    return passThrough;
   }
 }
 
 export interface ISummaryGenerator {
-  run: (target: string) => Promise<void>;
+  run: (pods: URL) => Promise<void>;
 }
 
 export interface ISummaryGeneratorArgs {

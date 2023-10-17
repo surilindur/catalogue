@@ -5,8 +5,8 @@ import type { SummaryGenerator } from './SummaryGenerator';
 
 export async function runApp(): Promise<void> {
   const args = await yargs(process.argv).options({
-    target: {
-      description: 'The target IRI to generate summaries for',
+    pods: {
+      description: 'The IRI of the pods from SolidBench',
       demandOption: true,
       type: 'string',
     },
@@ -30,9 +30,10 @@ export async function runApp(): Promise<void> {
     mainModulePath: args.mainModulePath,
     typeChecking: false,
   });
+  const podsUri = new URL(args.pods + (args.pods.endsWith('/') ? '' : '/'));
   await manager.configRegistry.register(args.config);
   const generator = await manager.instantiate<SummaryGenerator>(args.instanceIri);
-  await generator.run(args.target);
+  await generator.run(podsUri);
 }
 
 export function runAppSync(): void {

@@ -1,5 +1,5 @@
+import { PassThrough } from 'node:stream';
 import type * as RDF from '@rdfjs/types';
-import { AsyncIterator } from 'asynciterator';
 import { Bloem } from 'bloem';
 import { DataFactory } from 'rdf-data-factory';
 import { RDFS, MEM, XSD } from '../common/Namespaces';
@@ -19,8 +19,8 @@ export class DatasetSummaryBloom extends DatasetSummary {
     this.zeroFilledBuffer = Buffer.alloc(this.size);
   }
 
-  public async from(stream: AsyncIterator<QuadWithSource>): Promise<AsyncIterator<RDF.Quad>> {
-    const output = new AsyncIterator<RDF.Quad>();
+  public async from(stream: RDF.Stream<QuadWithSource>): Promise<RDF.Stream> {
+    const output = new PassThrough({ objectMode: true });
     const filtersByDataset: Map<string, IDatasetBloomFilters> = new Map();
     stream.on('data', (quad: QuadWithSource) => {
       const dataset = this.sourceToDataset(quad.source);
@@ -58,7 +58,7 @@ export class DatasetSummaryBloom extends DatasetSummary {
         const sf = df.blankNode();
         const pf = df.blankNode();
         const of = df.blankNode();
-        output.append([
+        [
           // Subject filter
           df.quad(sf, RDFS.type, MEM.BloomFilter),
           df.quad(sf, RDFS.type, MEM.ApproximateMembershipFunction),
@@ -86,10 +86,10 @@ export class DatasetSummaryBloom extends DatasetSummary {
             (<any>filters.object).bitfield.buffer.toString('base64'),
             XSD.base64Binary,
           )),
-        ]);
+        ].forEach((quad: RDF.Quad) => output.write(quad));
       }
-      output.emit('end');
-    }).on('error', error => output.emit('error', error));
+      output.end();
+    }).on('error', error => output.destroy(error));
 
     return output;
   }

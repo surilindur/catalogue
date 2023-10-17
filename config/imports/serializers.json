@@ -7,11 +7,18 @@
       "comment": "Filesystem data serializer",
       "@id": "urn:catalogue:serializer:filesystem",
       "@type": "DataSerializerFilesystem",
-      "targetPattern": "(https?):\\/\\/([a-z\\-0-9]+):([0-9]+)\\/(.*)",
-      "targetPatternReplacement": "out-fragments/$1/$2_$3/$4.meta",
-      "format": "application/n-quads",
-      "listonly": true,
-      "overwrite": false
+      "args_targetPattern": "^(.*\\/pods\\/(?<pod>[0-9]+)\\/.*)",
+      "args_targetPatternReplacement": "$2/.meta",
+      "args_format": "application/n-quads",
+      "args_listonly": true,
+      "args_overwrite": false
+    },
+    {
+      "comment": "Console data serializer",
+      "@id": "urn:catalogue:serializer:console",
+      "@type": "DataSerializerConsole",
+      "args_targetPattern": "^(.*\\/pods\\/(?<pod>[0-9]+)\\/.*)",
+      "args_targetPatternReplacement": "$2/.meta"
     }
   ]
 }

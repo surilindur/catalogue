@@ -20,6 +20,9 @@
       "serializers": [
         {
           "@id": "urn:catalogue:serializer:filesystem"
+        },
+        {
+          "@id": "urn:catalogue:serializer:console"
         }
       ],
       "summaries": [

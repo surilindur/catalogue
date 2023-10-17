@@ -1,9 +1,9 @@
 import { lstat, readdir } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
+import { PassThrough } from 'node:stream';
 import type * as RDF from '@rdfjs/types';
-import { AsyncIterator, UnionIterator } from 'asynciterator';
 import rdfDereference from 'rdf-dereference';
-import type { IDataLoader, IDataLoaderArgs, QuadWithSource } from './DataLoader';
+import type { IDataLoader, IDataLoaderArgs } from './DataLoader';
 
 export class DataLoaderFilesystem implements IDataLoader {
   private readonly ignorePattern: RegExp | undefined;
@@ -16,14 +16,16 @@ export class DataLoaderFilesystem implements IDataLoader {
     return uri.protocol === 'file';
   }
 
-  public async load(uri: URL): Promise<AsyncIterator<QuadWithSource>> {
-    const iterators: AsyncIterator<QuadWithSource>[] = [];
+  public async load(uri: URL): Promise<RDF.Stream> {
+    const stream = new PassThrough({ objectMode: true });
 
     const pathsToProcess: string[] = [
       resolve(uri.toString().replace('file://', '')),
     ];
 
-    while (pathsToProcess.length > 0) {
+    let counter = 10;
+
+    while (pathsToProcess.length > 0 && counter > 0) {
       const path = pathsToProcess.shift()!;
       if (!this.ignorePattern?.test(path)) {
         const stat = await lstat(path);
@@ -33,22 +35,22 @@ export class DataLoaderFilesystem implements IDataLoader {
             pathsToProcess.push(join(path, entry));
           }
         } else if (stat.isFile()) {
+          counter--;
           const pathUrl = new URL(`file://${path}`).toString();
-          const iterator = new AsyncIterator<QuadWithSource>();
+          // eslint-disable-next-line no-console
+          console.log(`Parse <${pathUrl}>`);
           const { data } = await rdfDereference.dereference(path, { localFiles: true });
           data
             .on('data', (quad: RDF.Quad) => {
-              iterator.append([{ ...quad, source: pathUrl }]);
+              (<any>quad).source = path;
+              stream.write(quad);
             })
-            .on('close', () => iterator.close())
-            .on('end', () => iterator.emit('end'))
-            .on('error', error => iterator.emit('error', error));
-          iterators.push(iterator);
+            .on('error', error => stream.destroy(error));
         }
       }
     }
 
-    return new UnionIterator(iterators, { destroySources: true, autoStart: false });
+    return stream;
   }
 }
 

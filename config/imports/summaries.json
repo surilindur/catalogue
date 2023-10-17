@@ -7,8 +7,10 @@
       "comment": "Summary collector for Bloom filters",
       "@id": "urn:catalogue:summary:bloom",
       "@type": "DatasetSummaryBloom",
-      "args_bloemSize": 512,
-      "args_bloemSlices": 2
+      "args_datasetRegex": "^(.*out-fragments\\/(?<protocol>[a-z]+)\\/(?<host>[a-z-]+)_(?<port>[0-9]+)\\/pods\\/(?<pod>[0-9]+)\\/.*)$",
+      "args_datasetRegexReplacement": "$2://$3:$4/pods/$5/",
+      "args_size": 512,
+      "args_slices": 2
     },
     {
       "comment": "Summary collector for VoID descriptions",
