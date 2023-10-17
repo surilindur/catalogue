@@ -1,17 +1,31 @@
 import type * as RDF from '@rdfjs/types';
+import type { AsyncIterator } from 'asynciterator';
+import type { QuadWithSource } from '../loaders/DataLoader';
 
-export abstract class DatasetSummary {
-  protected readonly dataset: string;
+export abstract class DatasetSummary implements IDatasetSummary {
+  private readonly datasetRegex: RegExp;
+  private readonly datasetRegexReplacement: string;
 
   public constructor(args: IDatasetSummaryArgs) {
-    this.dataset = args.dataset;
+    this.datasetRegex = new RegExp(args.datasetRegex, 'u');
+    this.datasetRegexReplacement = args.datasetRegexReplacement;
   }
 
-  public abstract register(quad: RDF.Quad): void;
-  public abstract quads(): RDF.Quad[];
+  public abstract from(stream: AsyncIterator<QuadWithSource>): Promise<AsyncIterator<RDF.Quad>>;
+
+  protected sourceToDataset(source: string): string | undefined {
+    if (this.datasetRegex.test(source)) {
+      return source.replace(this.datasetRegex, this.datasetRegexReplacement);
+    }
+  }
+}
+
+export interface IDatasetSummary {
+  from: (stream: AsyncIterator<QuadWithSource>) => Promise<AsyncIterator<RDF.Quad>>;
 }
 
 export interface IDatasetSummaryArgs {
-  dataset: string;
+  datasetRegex: string;
+  datasetRegexReplacement: string;
 }
 

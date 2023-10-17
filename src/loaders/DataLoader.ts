@@ -1,13 +1,11 @@
 import type * as RDF from '@rdfjs/types';
+import type { AsyncIterator } from 'asynciterator';
 
-export abstract class DataLoader implements IDataLoader {
-// eslint-disable-next-line @typescript-eslint/no-useless-constructor, @typescript-eslint/no-empty-function
-  public constructor(args: IDataLoaderArgs) {}
-  public abstract load(uri: string): Map<string, RDF.Quad[]>;
-}
+export type QuadWithSource = RDF.Quad & { source: string };
 
 export interface IDataLoader {
-  load: (uri: string) => Map<string, RDF.Quad[]>;
+  test: (uri: URL) => Promise<boolean>;
+  load: (uri: URL) => Promise<AsyncIterator<QuadWithSource>>;
 }
 
 export interface IDataLoaderArgs {}

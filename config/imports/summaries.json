@@ -5,15 +5,15 @@
   "@graph": [
     {
       "comment": "Summary collector for Bloom filters",
-      "@id": "urn:catalogue:collector:bloom",
-      "@type": "SummaryCollectorBloom",
-      "args_bloemSize": 1024,
+      "@id": "urn:catalogue:summary:bloom",
+      "@type": "DatasetSummaryBloom",
+      "args_bloemSize": 512,
       "args_bloemSlices": 2
     },
     {
       "comment": "Summary collector for VoID descriptions",
-      "@id": "urn:catalogue:collector:void",
-      "@type": "SummaryCollectorVoID"
+      "@id": "urn:catalogue:summary:void",
+      "@type": "DatasetSummaryVoID"
     }
   ]
 }

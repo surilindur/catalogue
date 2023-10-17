@@ -1,63 +1,54 @@
-import { readFileSync, lstatSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { lstat, readdir } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
 import type * as RDF from '@rdfjs/types';
-import { Parser } from 'n3';
-import { DataLoader, type IDataLoaderArgs } from './DataLoader';
+import { AsyncIterator, UnionIterator } from 'asynciterator';
+import rdfDereference from 'rdf-dereference';
+import type { IDataLoader, IDataLoaderArgs, QuadWithSource } from './DataLoader';
 
-export class DataLoaderFilesystem extends DataLoader {
-  private readonly prefix: string = 'file://';
+export class DataLoaderFilesystem implements IDataLoader {
   private readonly ignorePattern: RegExp | undefined;
-  private readonly datasetPattern: RegExp;
-  private readonly datasetPatternReplacement: string;
-  private readonly datasetQuads: Map<string, RDF.Quad[]>;
-
-  private paths: string[];
 
   public constructor(args: IDataLoaderFilesystemArgs) {
-    super(args);
     this.ignorePattern = args.ignorePattern ? new RegExp(args.ignorePattern, 'u') : undefined;
-    this.datasetPattern = new RegExp(args.datasetPattern, 'u');
-    this.datasetPatternReplacement = args.datasetPatternReplacement;
-    this.datasetQuads = new Map();
-    this.paths = [];
   }
 
-  public load(uri: string): Map<string, RDF.Quad[]> {
-    this.paths.push(uri.replace(this.prefix, ''));
-    this.loadDataFromPaths();
-    return this.datasetQuads;
+  public async test(uri: URL): Promise<boolean> {
+    return uri.protocol === 'file';
   }
 
-  private loadDataFromPaths(): void {
-    let previousDataset = '';
-    while (this.paths.length > 0) {
-      const path = this.paths[0];
+  public async load(uri: URL): Promise<AsyncIterator<QuadWithSource>> {
+    const iterators: AsyncIterator<QuadWithSource>[] = [];
+
+    const pathsToProcess: string[] = [
+      resolve(uri.toString().replace('file://', '')),
+    ];
+
+    while (pathsToProcess.length > 0) {
+      const path = pathsToProcess.shift()!;
       if (!this.ignorePattern?.test(path)) {
-        const stat = lstatSync(path);
+        const stat = await lstat(path);
         if (stat.isDirectory()) {
-          const entries = readdirSync(path, { encoding: 'utf8', recursive: false });
+          const entries = await readdir(path, { encoding: 'utf8', recursive: false });
           for (const entry of entries) {
-            this.paths.push(join(path, entry));
+            pathsToProcess.push(join(path, entry));
           }
         } else if (stat.isFile()) {
-          const dataset = path.replace(this.datasetPattern, this.datasetPatternReplacement);
-          if (dataset !== previousDataset) {
-            previousDataset = dataset;
-            // eslint-disable-next-line no-console
-            console.log(`Reading for dataset: ${dataset}`);
-          }
-          const parser = new Parser();
-          const contents = readFileSync(path, { encoding: 'utf8' });
-          const quads = parser.parse(contents);
-          if (!this.datasetQuads.has(dataset)) {
-            this.datasetQuads.set(dataset, quads);
-          } else {
-            this.datasetQuads.get(dataset)!.push(...quads);
-          }
+          const pathUrl = new URL(`file://${path}`).toString();
+          const iterator = new AsyncIterator<QuadWithSource>();
+          const { data } = await rdfDereference.dereference(path, { localFiles: true });
+          data
+            .on('data', (quad: RDF.Quad) => {
+              iterator.append([{ ...quad, source: pathUrl }]);
+            })
+            .on('close', () => iterator.close())
+            .on('end', () => iterator.emit('end'))
+            .on('error', error => iterator.emit('error', error));
+          iterators.push(iterator);
         }
       }
-      this.paths = this.paths.length > 1 ? this.paths.slice(1) : [];
     }
+
+    return new UnionIterator(iterators, { destroySources: true, autoStart: false });
   }
 }
 
@@ -66,9 +57,4 @@ export interface IDataLoaderFilesystemArgs extends IDataLoaderArgs {
    * Regular expression for paths to ignore.
    */
   ignorePattern: string | undefined;
-  /**
-   * Regular expression and replacement value to use for getting dataset URI from the document URI.
-   */
-  datasetPattern: string;
-  datasetPatternReplacement: string;
 }

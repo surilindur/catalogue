@@ -7,9 +7,7 @@
       "comment": "Filesystem data loader",
       "@id": "urn:catalogue:loader:filesystem",
       "@type": "DataLoaderFilesystem",
-      "args_ignorePattern": "\\.meta$",
-      "args_datasetPattern": ".*out-fragments\\/(https?)\\/([a-z\\-0-9]+)_([0-9]+)\\/(pods\\/[0-9]+).*",
-      "args_datasetPatternReplacement": "$1://$2:$3/$4/"
+      "ignorePattern": "\\.meta$"
     }
   ]
 }
