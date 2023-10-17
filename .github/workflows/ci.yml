@@ -23,7 +23,7 @@ jobs:
     - name: Install dependencies
       run: python -m pip install -r requirements.txt
     - name: Run linter
-      run: python -m pycodestyle catalogue/*.py
+      run: python -m pycodestyle --max-line-length=88 --statistics --count catalogue/
 
   docker:
     name: Docker

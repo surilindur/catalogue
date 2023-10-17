@@ -1,10 +1,12 @@
 # Catalogue
 
-This is an experimental set of small scripts to generate dataset summaries primarily for SolidBench. The generation is **not** pipelined and **not** done in a streaming manner, so for very large datasets it will definitely **not function**. The scripts make use of [RDFLib](https://github.com/RDFLib/rdflib). The use case of this set of scripts is to generate dataset summaries for the data from [SolidBench](https://github.com/SolidBench/SolidBench.js) for benchmarking purposes. The tool generates summaries for each pod, and places them in a file called `.meta` at the pod root. Using the `FixedContentTypeMapper` implementation from the [Community Solid Server](https://github.com/CommunitySolidServer/CommunitySolidServer/), the summaries are then served at the pod root URI when serving the dataset using the serve command from SolidBench.
+This is an experimental set of small scripts to generate dataset summaries for [SolidBench](https://github.com/SolidBench/SolidBench.js) for benchmarking purposes. The scripts make use of [RDFLib](https://github.com/RDFLib/rdflib). These scripts generate summaries for each pod, and place them in a file called `.meta` at the pod root. Using the `FixedContentTypeMapper` implementation from the [Community Solid Server](https://github.com/CommunitySolidServer/CommunitySolidServer/), the summaries are then served at the pod root URI when serving the dataset using the serve command from SolidBench.
 
 The following dataset summaries can be generated:
 
-* **VoID description** following the [Vocabulary of Interlinked Datasets (VoID)](https://www.w3.org/TR/void/). This is done by simply using the [generateVoID]() function from RDFLib.
+* **VoID description** following the [Vocabulary of Interlinked Datasets (VoID)](https://www.w3.org/TR/void/). This is done by simply using the [generateVoID](https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.void.generateVoID) function from RDFLib, because it has one readily available.
+
+The plan is to include Bloom filters later.
 
 ## Usage
 
