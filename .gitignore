@@ -1,16 +1,2 @@
-# Node modules and Components.js output
-node_modules/
-components/
-
-# SolidBench output
-out-*/
-
-# Error logs
-.yarn/
-yarn-error.log
-componentsjs-error-state.json
-
-# TypeScript compile output
-*.js
-*.js.map
-*.d.ts
+.venv
+__pycache__

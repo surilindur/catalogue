@@ -1,22 +1,11 @@
-FROM node:20-alpine as build
+FROM python:3-alpine
+
+ADD catalogue /opt/catalogue
 
 WORKDIR /opt/catalogue
 
-COPY . .
+ADD requirements.txt .
 
-RUN corepack enable && yarn install --immutable && yarn build
+RUN python -m pip install -r requirements.txt
 
-FROM gcr.io/distroless/nodejs20-debian12
-
-WORKDIR /opt/catalogue
-
-COPY --from=build /opt/catalogue/package.json ./package.json
-COPY --from=build /opt/catalogue/bin ./bin
-COPY --from=build /opt/catalogue/src ./src
-COPY --from=build /opt/catalogue/config ./config
-COPY --from=build /opt/catalogue/components ./components
-COPY --from=build /opt/catalogue/node_modules ./node_modules
-
-CMD [ "./bin/catalogue.js" ]
-
-ENV NODE_ENV production
+ENTRYPOINT [ "python", "runner.py" ]
