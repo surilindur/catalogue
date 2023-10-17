@@ -32,5 +32,14 @@ def generate_void(root: str, path: Path) -> Graph:
         dataset=dataset,
         distinctForPartitions=True,
     )
+    void: Graph = void
+    uri: URIRef = uri
+    output: Graph = Graph()
+    for s, p, o in void:
+        if isinstance(s, URIRef):
+            s = URIRef(s.replace("/_", "/#"))
+        if isinstance(o, URIRef):
+            o = URIRef(o.replace("/_", "/#"))
+        output.add((s, p, o))
     info(f"Generated for {uri}")
-    return void
+    return output
