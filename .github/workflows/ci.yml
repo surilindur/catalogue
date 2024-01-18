@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+env:
+  NODE_VERSION: 21
+
 jobs:
 
   lint:
@@ -16,9 +19,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: Setup Python 3
+    - name: Setup Node ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v4
       with:
-        node-version: 21
+        node-version: ${{ env.NODE_VERSION }}
     - name: Install dependencies
-      run: yarn install
+      run: |
+        corepack enable
+        yarn install
