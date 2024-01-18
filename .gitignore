@@ -1,2 +1,6 @@
-.venv
-__pycache__
+**/.yarn
+**/node_modules
+
+*.js
+*.js.map
+*.d.ts

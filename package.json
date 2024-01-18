@@ -1,0 +1,28 @@
+{
+  "name": "solidbench-pod-summary-generator",
+  "version": "0.0.0",
+  "repository": "git@github.com:surilindur/catalogue.git",
+  "packageManager": "yarn@4.0.2",
+  "author": "surilindur",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint . --ext .ts",
+    "build": "tsc",
+    "prepare": "yarn run build"
+  },
+  "dependencies": {
+    "bloem": "^0.2.0",
+    "n3": "^1.0.0",
+    "yargs": "^17.0.0"
+  },
+  "devDependencies": {
+    "@rdfjs/types": "*",
+    "@rubensworks/eslint-config": "^2.0.0",
+    "@types/bloem": "^0.2.0",
+    "@types/n3": "^1.0.0",
+    "@types/yargs": "^17.0.0",
+    "eslint": "8.48.0",
+    "rdf-data-factory": "^1.0.0",
+    "typescript": "^5.0.0"
+  }
+}

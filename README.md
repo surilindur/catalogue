@@ -1,45 +1,37 @@
-# Catalogue
+<p align="center">
+    <!--<img alt="logo" src="https://raw.githubusercontent.com/surilindur/catalogue/main/images/logo.svg" width="200">-->
+    <strong>Catalogue</strong>
+</p>
 
-This is an experimental set of small scripts to generate dataset summaries for [SolidBench](https://github.com/SolidBench/SolidBench.js) for benchmarking purposes. The scripts make use of [RDFLib](https://github.com/RDFLib/rdflib). These scripts generate summaries for each pod, and place them in a file called `.meta` at the pod root. Using the `FixedContentTypeMapper` implementation from the [Community Solid Server](https://github.com/CommunitySolidServer/CommunitySolidServer/), the summaries are then served at the pod root URI when serving the dataset using the serve command from SolidBench.
+<p align="center">
+  <a href="https://github.com/surilindur/catalogue/actions/workflows/ci.yml"><img alt="CI" src=https://github.com/surilindur/catalogue/actions/workflows/ci.yml/badge.svg?branch=main"></a>
+  <a href="https://www.typescriptlang.org/"><img alt="TypeScript" src="https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg"></a>
+  <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
+</p>
+
+This is an experimental set of small scripts to generate dataset summaries for [SolidBench](https://github.com/SolidBench/SolidBench.js) for benchmarking purposes. These scripts generate summaries for each pod, and place them in a file called `.meta` at the pod root. Using the `FixedContentTypeMapper` implementation from the [Community Solid Server](https://github.com/CommunitySolidServer/CommunitySolidServer/), the summaries are then served at the pod root URI when serving the dataset using the serve command from SolidBench.
 
 The following dataset summaries can be generated:
 
-* **VoID description** following the [Vocabulary of Interlinked Datasets (VoID)](https://www.w3.org/TR/void/). This is done by simply using the [generateVoID](https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.void.generateVoID) function from RDFLib, because it has one readily available.
+* **VoID description** following the [Vocabulary of Interlinked Datasets (VoID)](https://www.w3.org/TR/void/).
+* **Bloom filter** following the [Membership function vocabulary](http://semweb.mmlab.be/ns/membership), using FNV hashes via the `Bloem` library. The scripts generate filters for subject, predicate and object, as well as a combined filter.
 
-The plan is to include Bloom filters later.
+These still need to be tested.
 
-## Usage
+## Development Setup
 
-The tool is not published anywhere, because it is not intended for actual use and is only intended for experiments. After cloning the repository, it should be sufficient to install the dependencies and build:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-```
-
-The tool can then be used. For example, VoID descriptions can be generated with:
+The project can be cloned, after which the dependencies can be installed and the project built:
 
 ```bash
-python catalogue/runner.py --path .../out-fragments/http/localhost_3000/pods/ --root http://localhost:3000/pods/ --void-descriptions
+yarn install --immutable
 ```
 
-## Docker
-
-There is a Dockerfile provided for building the repository into a Docker image:
-
-```bash
-docker build --network host --tag solidlab/catalogue:dev .
-```
-
-The image can then be used to run the tool directly:
-
-```bash
-docker run solidlab/catalogue:dev --help
-```
-
-The image is not published anywhere and should not be published anywhere, either.
+There are no unit tests and nothing is guaranteed to function as one would expect it to.
 
 ## Issues
 
-Any issues encountered can be reported via the GitHub issue tracker. However, before reporting issues, please note that this is not a production-ready application and is not intended for everyday use.
+Please feel free to report any issues on the GitHub issue tracker, but do note that this is just a small set of scripts and is not intended for actual use.
+
+## License
+
+This code is released under the [MIT license](http://opensource.org/licenses/MIT).

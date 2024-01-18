@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
+    "module": "CommonJS",
+    "sourceMap": true,
+    "declaration": true,
+    "allowJs": false,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true
+  },
+  "include": [
+    "bin/*.ts",
+    "lib/*.ts"
+  ],
+  "exclude": [
+    "**/node_modules"
+  ]
+}
