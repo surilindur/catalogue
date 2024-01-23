@@ -23,10 +23,11 @@ export class DatasetSummaryBloom extends DatasetSummary {
     super(args);
     this.filterSize = args.filterSize ?? 32;
     this.filterSlices = args.filterSlices ?? 4;
-    this.filter = new Bloem(this.filterSize, this.filterSlices, Buffer.from(''));
-    this.filterForSubject = new Bloem(this.filterSize, this.filterSlices, Buffer.from(''));
-    this.filterForPredicate = new Bloem(this.filterSize, this.filterSlices, Buffer.from(''));
-    this.filterForObject = new Bloem(this.filterSize, this.filterSlices, Buffer.from(''));
+    const bits = this.filterSize / 8;
+    this.filter = new Bloem(this.filterSize, this.filterSlices, Buffer.alloc(bits));
+    this.filterForSubject = new Bloem(this.filterSize, this.filterSlices, Buffer.alloc(bits));
+    this.filterForPredicate = new Bloem(this.filterSize, this.filterSlices, Buffer.alloc(bits));
+    this.filterForObject = new Bloem(this.filterSize, this.filterSlices, Buffer.alloc(bits));
   }
 
   public register(quad: RDF.Quad): void {
@@ -49,14 +50,37 @@ export class DatasetSummaryBloom extends DatasetSummary {
 
   public toQuads(): RDF.Quad[] {
     const result: RDF.Quad[] = [];
-    const filtersToSerialize: Record<string, Bloem> = {
-      filter: this.filter,
-      filtersubject: this.filterForSubject,
-      filterpredicate: this.filterForPredicate,
-      filterobject: this.filterForObject,
+    const filtersToSerialize: Record<string, [ Bloem, RDF.NamedNode[] ]> = {
+      filter: [
+        this.filter,
+        [
+          DatasetSummaryBloom.RDF_SUBJECT,
+          DatasetSummaryBloom.RDF_PREDICATE,
+          DatasetSummaryBloom.RDF_OBJECT,
+        ],
+      ],
+      filtersubject: [
+        this.filterForSubject,
+        [
+          DatasetSummaryBloom.RDF_SUBJECT,
+        ],
+      ],
+      filterpredicate: [
+        this.filterForPredicate,
+        [
+          DatasetSummaryBloom.RDF_PREDICATE,
+        ],
+      ],
+      filterobject: [
+        this.filterForObject,
+        [
+          DatasetSummaryBloom.RDF_OBJECT,
+        ],
+      ],
     };
-    for (const [ fragment, filter ] of Object.entries(filtersToSerialize)) {
+    for (const [ fragment, filterData ] of Object.entries(filtersToSerialize)) {
       const filterUri = DF.namedNode(`${this.dataset}#${fragment}`);
+      const bitfieldBase64 = (<Buffer>(<any>filterData[0]).bitfield.toBuffer()).toString('base64');
       result.push(
         DF.quad(filterUri, DatasetSummaryBloom.RDF_TYPE, DatasetSummaryBloom.MEM_BLOOMFILTER),
         DF.quad(filterUri, DatasetSummaryBloom.MEM_COLLECTION, DF.namedNode(this.dataset.toString())),
@@ -68,11 +92,16 @@ export class DatasetSummaryBloom extends DatasetSummary {
           this.filterSlices.toString(10),
           DatasetSummaryBloom.XSD_INTEGER,
         )),
-        DF.quad(filterUri, DatasetSummaryBloom.MEM_PROPERTY, DatasetSummaryBloom.RDF_SUBJECT),
-        DF.quad(filterUri, DatasetSummaryBloom.MEM_PROPERTY, DatasetSummaryBloom.RDF_PREDICATE),
-        DF.quad(filterUri, DatasetSummaryBloom.MEM_PROPERTY, DatasetSummaryBloom.RDF_OBJECT),
-        DF.quad(filterUri, DatasetSummaryBloom.MEM_REPRESENTATION, (<any>filter).bitfield.toString('base64')),
+        DF.quad(filterUri, DatasetSummaryBloom.MEM_REPRESENTATION, DF.literal(
+          bitfieldBase64,
+          DatasetSummaryBloom.XSD_BASE64,
+        )),
       );
+      for (const member of filterData[1]) {
+        result.push(
+          DF.quad(filterUri, DatasetSummaryBloom.MEM_PROPERTY, member),
+        );
+      }
     }
     return result;
   }

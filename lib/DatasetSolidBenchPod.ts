@@ -18,28 +18,36 @@ export class DatasetSolidBenchPod implements IDataset {
   }
 
   public async load(): Promise<RDF.Stream> {
-    const backlog = [ this.path ];
-    let stream: Stream | undefined;
-    const parser = new StreamParser();
-    while (backlog.length > 0) {
-      const path = backlog.shift();
-      if (path) {
-        if (path.isDirectory()) {
-          backlog.push(...await readdir(path.path, { recursive: true, encoding: 'utf8', withFileTypes: true }));
-        } else if (path.isFile()) {
-          stream = createReadStream(path.path).pipe(parser, { end: false });
-        }
+    // The setMaxListeners is there because of the piping, which causes a lot of listeners to be added for some reason.
+    // Ideally, it should be replaced with something that handles the listener stuff better.
+    const parser = new StreamParser({ format: 'N-Quads' }).setMaxListeners(1_000);
+    const fileStreams = (await readdir(join(this.path.path, this.path.name), {
+      recursive: true,
+      encoding: 'utf8',
+      withFileTypes: true,
+    }))
+      .filter(path => path.name !== '.meta' && (path.isFile() || path.isSymbolicLink()))
+      .map(path => createReadStream(join(path.path, path.name)));
+    let previousStream: Stream | undefined;
+    for (const stream of fileStreams) {
+      if (previousStream) {
+        previousStream.on('end', () => {
+          stream.pipe(parser, { end: false });
+        });
+      } else {
+        stream.pipe(parser, { end: false });
       }
+      previousStream = stream;
     }
-    if (stream) {
-      stream.on('end', () => parser.end());
+    if (previousStream) {
+      previousStream.on('end', () => parser.end());
     }
     return parser;
   }
 
   public async setMetadata(quads: RDF.Quad[], format = 'application/n-quads'): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const metaPath = join(this.path.path, '.meta');
+      const metaPath = join(this.path.path, this.path.name, '.meta');
       const writer = new Writer({ format });
       writer.addQuads(quads);
       writer.end((err, result) => err ? reject(err) : writeFile(metaPath, result).then(resolve).catch(reject));

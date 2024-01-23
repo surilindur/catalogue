@@ -22,6 +22,7 @@ export abstract class DatasetSummary implements IDatasetSummary {
   public static readonly RDF_OBJECT = DF.namedNode(`${DatasetSummary.RDF_PREFIX}object`);
 
   public static readonly XSD_INTEGER = DF.namedNode('http://www.w3.org/2001/XMLSchema#integer');
+  public static readonly XSD_BASE64 = DF.namedNode('http://www.w3.org/2001/XMLSchema#base64Binary');
 
   public constructor(args: IDatasetSummaryArgs) {
     this.dataset = args.dataset;

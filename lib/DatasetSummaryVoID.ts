@@ -1,12 +1,20 @@
+import { createHash } from 'node:crypto';
 import type * as RDF from '@rdfjs/types';
+import { termToString } from 'rdf-string';
 import { DF, DatasetSummary, type IDatasetSummaryArgs } from './DatasetSummary';
 
 export class DatasetSummaryVoID extends DatasetSummary {
+  // Entire dataset-related data
   protected totalQuads: number;
   protected readonly distinctSubjects: Set<string>;
   protected readonly distinctObjects: Set<string>;
-  protected readonly distinctClasses: Set<string>;
-  protected readonly quadCountByPredicate: Map<string, number>;
+
+  // Property partition-related data
+  protected readonly totalQuadsByPredicate: Map<string, number>;
+  protected readonly distinctSubjectsByPredicate: Map<string, Set<string>>;
+  protected readonly distinctObjectsByPredicate: Map<string, Set<string>>;
+
+  // Class partition-related data
   protected readonly entitiesByClass: Map<string, Set<string>>;
 
   public static readonly VOID_PREFIX = 'http://rdfs.org/ns/void#';
@@ -28,31 +36,58 @@ export class DatasetSummaryVoID extends DatasetSummary {
     this.totalQuads = 0;
     this.distinctSubjects = new Set();
     this.distinctObjects = new Set();
-    this.distinctClasses = new Set();
-    this.quadCountByPredicate = new Map();
+    this.totalQuadsByPredicate = new Map();
+    this.distinctSubjectsByPredicate = new Map();
+    this.distinctObjectsByPredicate = new Map();
     this.entitiesByClass = new Map();
   }
 
   public register(quad: RDF.Quad): void {
+    if (quad.subject.termType !== 'NamedNode' && quad.subject.termType !== 'BlankNode') {
+      throw new Error(`Only named and blank nodes are accepted as subject: ${termToString(quad.subject)}`);
+    }
+    if (quad.predicate.termType !== 'NamedNode') {
+      throw new Error(`Only named nodes are accepted as predicate: ${termToString(quad.predicate)}`);
+    }
+    if (
+      quad.object.termType !== 'BlankNode' &&
+      quad.object.termType !== 'NamedNode' &&
+      quad.object.termType !== 'Literal'
+    ) {
+      throw new Error(`Only named and blank nodes or literals are accepted as object: ${termToString(quad.object)}`);
+    }
     this.totalQuads++;
-    if (quad.subject.termType === 'BlankNode' || quad.subject.termType === 'NamedNode') {
-      this.distinctSubjects.add(quad.subject.value);
+    this.distinctSubjects.add(quad.subject.value);
+    this.distinctObjects.add(quad.object.termType === 'Literal' ?
+      quad.object.value + quad.object.language + quad.object.datatype.value :
+      quad.object.value);
+
+    let predicateSubjects = this.distinctSubjectsByPredicate.get(quad.predicate.value);
+    if (!predicateSubjects) {
+      predicateSubjects = new Set();
+      this.distinctSubjectsByPredicate.set(quad.predicate.value, predicateSubjects);
     }
-    if (quad.object.termType === 'BlankNode' || quad.object.termType === 'NamedNode') {
-      this.distinctObjects.add(quad.object.value);
-    } else if (quad.object.termType === 'Literal') {
-      this.distinctObjects.add(quad.object.value + quad.object.language + quad.object.datatype.value);
+    predicateSubjects.add(quad.subject.value);
+
+    let predicateObjects = this.distinctObjectsByPredicate.get(quad.predicate.value);
+    if (!predicateObjects) {
+      predicateObjects = new Set();
+      this.distinctObjectsByPredicate.set(quad.predicate.value, predicateObjects);
     }
-    if (quad.predicate.termType === 'NamedNode') {
-      if (quad.predicate.value === DatasetSummaryVoID.RDF_TYPE.value && quad.object.termType === 'NamedNode') {
-        this.distinctClasses.add(quad.object.value);
-        if (quad.object.value in this.entitiesByClass) {
-          this.entitiesByClass.get(quad.object.value)!.add(quad.subject.value);
-        } else {
-          this.entitiesByClass.set(quad.object.value, new Set([ quad.subject.value ]));
-        }
+    predicateObjects.add(quad.predicate.value);
+
+    this.totalQuadsByPredicate.set(
+      quad.predicate.value,
+      (this.totalQuadsByPredicate.get(quad.predicate.value) ?? 0) + 1,
+    );
+
+    if (quad.predicate.value === DatasetSummaryVoID.RDF_TYPE.value && quad.object.termType === 'NamedNode') {
+      let entitiesByClass = this.entitiesByClass.get(quad.object.value);
+      if (!entitiesByClass) {
+        entitiesByClass = new Set();
+        this.entitiesByClass.set(quad.object.value, entitiesByClass);
       }
-      this.quadCountByPredicate.set(quad.predicate.value, this.quadCountByPredicate.get(quad.predicate.value) ?? 0 + 1);
+      entitiesByClass.add(quad.subject.value);
     }
   }
 
@@ -62,7 +97,7 @@ export class DatasetSummaryVoID extends DatasetSummary {
       DF.quad(dataset, DatasetSummaryVoID.RDF_TYPE, DatasetSummaryVoID.VOID_DATASET),
       DF.quad(dataset, DatasetSummaryVoID.VOID_URISPACE, DF.literal(this.dataset.toString())),
       DF.quad(dataset, DatasetSummaryVoID.VOID_CLASSES, DF.literal(
-        this.distinctClasses.size.toString(10),
+        this.entitiesByClass.size.toString(10),
         DatasetSummaryVoID.XSD_INTEGER,
       )),
       DF.quad(dataset, DatasetSummaryVoID.VOID_TRIPLES, DF.literal(
@@ -70,7 +105,7 @@ export class DatasetSummaryVoID extends DatasetSummary {
         DatasetSummaryVoID.XSD_INTEGER,
       )),
       DF.quad(dataset, DatasetSummaryVoID.VOID_PROPERTIES, DF.literal(
-        this.quadCountByPredicate.size.toString(10),
+        this.totalQuadsByPredicate.size.toString(10),
         DatasetSummaryVoID.XSD_INTEGER,
       )),
       DF.quad(dataset, DatasetSummaryVoID.VOID_DISTINCT_SUBJECTS, DF.literal(
@@ -82,30 +117,52 @@ export class DatasetSummaryVoID extends DatasetSummary {
         DatasetSummaryVoID.XSD_INTEGER,
       )),
     ];
-    for (const [ predicate, count ] of this.quadCountByPredicate) {
-      const partitionId = DF.blankNode();
+    for (const [ predicate, count ] of this.totalQuadsByPredicate) {
+      const partitionUri = DF.namedNode(`${this.dataset}#${this.hashString(predicate)}`);
       result.push(
-        DF.quad(dataset, DatasetSummaryVoID.VOID_PROPERTY_PARTITION, partitionId),
-        DF.quad(partitionId, DatasetSummaryVoID.RDF_TYPE, DatasetSummaryVoID.VOID_DATASET),
-        DF.quad(partitionId, DatasetSummaryVoID.VOID_PROPERTY, DF.namedNode(predicate)),
-        DF.quad(partitionId, DatasetSummaryVoID.VOID_TRIPLES, DF.literal(
+        DF.quad(dataset, DatasetSummaryVoID.VOID_PROPERTY_PARTITION, partitionUri),
+        DF.quad(partitionUri, DatasetSummaryVoID.RDF_TYPE, DatasetSummaryVoID.VOID_DATASET),
+        DF.quad(partitionUri, DatasetSummaryVoID.VOID_PROPERTY, DF.namedNode(predicate)),
+        DF.quad(partitionUri, DatasetSummaryVoID.VOID_TRIPLES, DF.literal(
           count.toString(10),
           DatasetSummaryVoID.XSD_INTEGER,
         )),
       );
+      const distinctSubjectsForPredicate = this.distinctSubjectsByPredicate.get(predicate);
+      if (distinctSubjectsForPredicate) {
+        result.push(DF.quad(partitionUri, DatasetSummaryVoID.VOID_DISTINCT_SUBJECTS, DF.literal(
+          distinctSubjectsForPredicate.size.toString(10),
+          DatasetSummaryVoID.XSD_INTEGER,
+        )));
+      }
+      const distinctObjectsForPredicate = this.distinctObjectsByPredicate.get(predicate);
+      if (distinctObjectsForPredicate) {
+        result.push(DF.quad(partitionUri, DatasetSummaryVoID.VOID_DISTINCT_OBJECTS, DF.literal(
+          distinctObjectsForPredicate.size.toString(10),
+          DatasetSummaryVoID.XSD_INTEGER,
+        )));
+      }
     }
     for (const [ rdfclass, entities ] of this.entitiesByClass) {
-      const partitionId = DF.blankNode();
+      const partitionUri = DF.namedNode(`${this.dataset}#${this.hashString(rdfclass)}`);
       result.push(
-        DF.quad(dataset, DatasetSummaryVoID.VOID_CLASS_PARTITION, partitionId),
-        DF.quad(partitionId, DatasetSummaryVoID.RDF_TYPE, DatasetSummaryVoID.VOID_DATASET),
-        DF.quad(partitionId, DatasetSummaryVoID.VOID_CLASS, DF.namedNode(rdfclass)),
-        DF.quad(partitionId, DatasetSummaryVoID.VOID_ENTITIES, DF.literal(
+        DF.quad(dataset, DatasetSummaryVoID.VOID_CLASS_PARTITION, partitionUri),
+        DF.quad(partitionUri, DatasetSummaryVoID.RDF_TYPE, DatasetSummaryVoID.VOID_DATASET),
+        DF.quad(partitionUri, DatasetSummaryVoID.VOID_CLASS, DF.namedNode(rdfclass)),
+        DF.quad(partitionUri, DatasetSummaryVoID.VOID_ENTITIES, DF.literal(
           entities.size.toString(),
           DatasetSummaryVoID.XSD_INTEGER,
         )),
       );
     }
     return result;
+  }
+
+  protected hashString(value: string): string {
+    return createHash('md5', { encoding: 'utf8' }).update(value).end().digest('hex');
+  }
+
+  protected hashLiteral(literal: RDF.Literal): string {
+    return this.hashString([ literal.value, literal.language, literal.datatype ].join('::'));
   }
 }

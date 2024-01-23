@@ -13,17 +13,14 @@ env:
 
 jobs:
 
-  lint:
-    name: Lint
+  build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Setup Node ${{ env.NODE_VERSION }}
-      uses: actions/setup-node@v4
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v4
       with:
         node-version: ${{ env.NODE_VERSION }}
-    - name: Install dependencies
-      run: |
-        corepack enable
-        yarn install
+    - run: corepack enable
+    - run: yarn install
+    - run: yarn lint
+    - run: yarn build

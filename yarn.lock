@@ -361,12 +361,12 @@ __metadata:
   linkType: hard
 
 "@jridgewell/trace-mapping@npm:^0.3.17, @jridgewell/trace-mapping@npm:^0.3.9":
-  version: 0.3.21
-  resolution: "@jridgewell/trace-mapping@npm:0.3.21"
+  version: 0.3.22
+  resolution: "@jridgewell/trace-mapping@npm:0.3.22"
   dependencies:
     "@jridgewell/resolve-uri": "npm:^3.1.0"
     "@jridgewell/sourcemap-codec": "npm:^1.4.14"
-  checksum: 925dda0620887e5a24f11b5a3a106f4e8b1a66155b49be6ceee61432174df33a17c243d8a89b2cd79ccebd281d817878759236a2fc42c47325ae9f73dfbfb90d
+  checksum: 48d3e3db00dbecb211613649a1849876ba5544a3f41cf5e6b99ea1130272d6cf18591b5b67389bce20f1c871b4ede5900c3b6446a7aab6d0a3b2fe806a834db7
   languageName: node
   linkType: hard
 
@@ -1102,9 +1102,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.601":
-  version: 1.4.637
-  resolution: "electron-to-chromium@npm:1.4.637"
-  checksum: c90d842f2ee4961d46ddce5f684c8f62f31f12d090c040b80dae86a0ad1971a0dc3b6329d24e8c52085e78ece949dfad46ad833d0b2af04197d46baf9128f49c
+  version: 1.4.642
+  resolution: "electron-to-chromium@npm:1.4.642"
+  checksum: a311069d54de937f93944cb49826a2a92f2332644673c2e85c67f5d6592468e48eb795c0f96c9377e6d09948cdadfc07ce021af2b30350dc2dd86a491d7e1288
   languageName: node
   linkType: hard
 
@@ -2778,12 +2778,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rdf-data-factory@npm:^1.0.0":
+"rdf-data-factory@npm:^1.0.0, rdf-data-factory@npm:^1.1.0":
   version: 1.1.2
   resolution: "rdf-data-factory@npm:1.1.2"
   dependencies:
     "@rdfjs/types": "npm:*"
   checksum: 80a87a563b82d9a34ce61c3e0e691b9348a24895b8f48f2716d077af7a03252a59b68f4ecf50859ae3f6cda28adb104590c899d11414931b555e9a9bcd8e8c76
+  languageName: node
+  linkType: hard
+
+"rdf-string@npm:^1.0.0":
+  version: 1.6.3
+  resolution: "rdf-string@npm:1.6.3"
+  dependencies:
+    "@rdfjs/types": "npm:*"
+    rdf-data-factory: "npm:^1.1.0"
+  checksum: bb3b565e50556a77442945c2d0f7a3b1a60fae02d21c7b9d3d682d042c374da09a65cea36f7799f5cc637eccafec98fb559d64c124ca9507cf94841dddf1a109
   languageName: node
   linkType: hard
 
@@ -3102,6 +3112,7 @@ __metadata:
     eslint: "npm:8.48.0"
     n3: "npm:^1.0.0"
     rdf-data-factory: "npm:^1.0.0"
+    rdf-string: "npm:^1.0.0"
     typescript: "npm:^5.0.0"
     yargs: "npm:^17.0.0"
   languageName: unknown
