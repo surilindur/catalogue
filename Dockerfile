@@ -1,11 +1,9 @@
-FROM python:3-alpine
+FROM node:current-alpine
 
-ADD catalogue /opt/catalogue
+ADD . /opt/catalogue
 
 WORKDIR /opt/catalogue
 
-ADD requirements.txt .
+RUN corepack enable && yarn install --immutable && yarn build
 
-RUN python -m pip install -r requirements.txt
-
-ENTRYPOINT [ "python", "runner.py" ]
+ENTRYPOINT [ "node", "bin/catalogue.js" ]
